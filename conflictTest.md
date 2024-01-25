@@ -9,3 +9,5 @@
 
 
 I've now added additional text on Github, thus completing step 3.
+
+This is step 6.
