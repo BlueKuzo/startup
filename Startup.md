@@ -93,3 +93,7 @@ Here are some common mistakes that will slow down the development of your startu
 5. Implementing too many features. Focus on delivering a core feature really well. Once you have completely built out that functionality, then you can add additional features. A common mistake is to start building lots of features at the start, and then not completing any of them. For example, if you are writing a stock trading application, then make sure you can display stocks and save your favorites, before you start designing the ability to see your friend's picks, chat about the market, display historical charts, or use AI to predict the future.
 
 6. Forgetting that programming is an art. Building a web application is a creative expression of who you are, what you know, and the vision you have. Don't get frustrated because you cannot immediately realize your potential. That will take time and effort. Just remember that as you develop your skills, it will become increasingly satisfying to see what amazing things you can build and what an positive impact you can make for so many people. God has given you specific talents, and as you develop them, you are going to do great things for good with them.
+
+
+DEMO DAY
+At the end of class we will conduct a demo day for the best applications. Those selected for the demo day will be awarded additional credit for the exceptional work. The top presenters will be given the coveted Ghirardelli award.
