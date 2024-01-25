@@ -61,8 +61,17 @@ Some ideas for possible projects include:
 * Favorite website sharing
 * Group voting
 * Group calendaring
+* Thesaurdle enables players to start with one word and work towards a goal word by traversing synonyms.
+* Zen Garden demonstrates the power of elegant, clean, UI design to create a custom plants that you add to your personal collection.
 
 Demonstrating the technology is more important than complexity or creativity, and basic implementations of each of the course technologies is sufficient to demonstrate your mastery.
+
+
+EXAMPLES
+
+* The Simon demonstration application (https://simon.cs260.click/) provides a good example for the level of complexity that you should be working towards. Each of the course technologies are demonstrated in about 100 lines of code.
+
+* The voting application (https://startup.cs260.click/) allows multiple users to vote on their favorite startup application in realtime.
 
 
 MY IDEA:
