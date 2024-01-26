@@ -12,6 +12,6 @@ delopyFiles.sh
 HTML - just structure of your program; it's all dummy data and minimally interactive. The only logic in the code is for navigating between pages.
 index.html = default homepage
 
-CSS - Give HTML good and adjustable appearance.
+CSS - give HTML documents visual styling independent of the content's structure. “If we hadn’t developed CSS, we could have ended up with the web being a giant fax machine.”
 
-javascript - Add logic?
+JavaScript turned the previously static web into an interactive experience where a web page could dynamically change based upon a user's interaction.
