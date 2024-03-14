@@ -18,6 +18,6 @@ WebSocket - As each user submits encounters to compare, the encounters are rated
 
 React - Application ported to use the React web framework.
 
-![Main Page](https://jergy-bucket.s3.us-west-1.amazonaws.com/mainPage.png_image.png "Main Page")
+[Main Page](https://jergy-bucket.s3.us-west-1.amazonaws.com/mainPage.png_image.png "Main Page")
 
-![Popups](https://jergy-bucket.s3.us-west-1.amazonaws.com/popups.png_image.png "Popups")
+[Popups](https://jergy-bucket.s3.us-west-1.amazonaws.com/popups.png_image.png "Popups")
