@@ -1,0 +1,68 @@
+<html>
+    <head>
+        <title>Encounter Creator</title>
+    </head>
+    
+    <body>
+        <div id="left column">
+            <table id="parties">
+                <th>Saved Parties</th>
+                <tbody id="savedPartiesList">
+                <!-- List of saved parties will be dynamically added here -->
+                </tbody>
+                <td> + New Party </td>
+            </table>
+            
+            <table id="encounters">
+                <th>Saved Encounters</th>  
+                <tbody id="savedEncountersList">
+                <!-- List of saved encounters will be dynamically added here -->
+                </tbody>
+                <td> + New Encounter </td>
+            </table>
+        </div>
+    
+        <div id="center column">
+            <table id="party">
+                <th>
+                  <h> Party: </h>
+                  <input id="partyname"></input>
+                  <button> SAVE </button>
+                </th>
+                <tbody id="partyMembers">
+                <!-- List of party members will be dynamically added here -->
+                </tbody>
+                <td> + New Character </td>
+            </table>
+            
+            <table id="encounter">
+                <th>
+                  <h> Encounter: </h>
+                  <input id="encountername"></input>
+                  <button> SAVE </button>
+                </th> 
+                <tbody id="EncounterElements">
+                <!-- List of encounter elements will be dynamically added here -->
+                </tbody>
+                <td> + New Character </td>
+            </table>
+        </div>
+    
+        <div id="right column">
+            <div id="output">
+                <div>Overall Challenge</div>
+                <div id="overallChallengeResult" class="outputWindow"></div>
+                <div>Defensive Challenge</div>
+                <div id="defensiveChallengeResult" class="outputWindow"></div>
+                <div>Offensive Challenge</div>
+                <div id="offensiveChallengeResult" class="outputWindow"></div>
+                <button> COMPUTE </button>
+            </div>
+            
+            <div id="user">
+                <p>User: <span id="username"></span></p>
+                <button> LOGOUT </button>
+            </div>
+        </div>
+    </body>
+</html>
