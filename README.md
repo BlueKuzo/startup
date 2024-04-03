@@ -38,7 +38,7 @@ Application textual content - I'm not sure what this means... Is it just saying 
 
 Placeholder for 3rd party service calls - See div id "output" in EncounterCreatorMain.html
 
-Application images - Since when were images required for the website?
+Application images - Last element of div id "user"
 
 Login placeholder, including user name display - See index.html. Also div id "user" in EncounterCreatorMain.html
 
