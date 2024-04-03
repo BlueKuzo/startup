@@ -14,7 +14,7 @@ Service - Backend service with endpoints for submitting and retrieving data.
 
 DB/Login - Store users, parties, and encounters in database. Register and login users. Credentials securely stored in database. Can't save or retrieve data unless authenticated.
 
-WebSocket - As each user submits encounters to compare, the encounters are rated as easy, medium, hard, or deadly. Selecting a saved creature loads their details (except number).
+WebSocket - Notify all users when a new element (party, encounter, etc.) is created.
 
 React - Application ported to use the React web framework.
 
