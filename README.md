@@ -28,17 +28,17 @@ React - Application ported to use the React web framework.
 
 # HTML Assignment
 
-# HTML pages for each component of your application - There's 5 pages: index.html, EncounterCreatorMain.html, PCWindow.html, CreautreWindow.html, and creatureList.html
+HTML pages for each component of your application - There's 5 pages: index.html, EncounterCreatorMain.html, PCWindow.html, CreautreWindow.html, and creatureList.html
 
-# Proper use of HTML tags including BODY, NAV, MAIN, HEADER, FOOTER - I'm pretty sure I've done this all. I'm not really sure what to write other than, you know, the code..?
+Proper use of HTML tags including BODY, NAV, MAIN, HEADER, FOOTER - I'm pretty sure I've done this all. I'm not really sure what to write other than, you know, the code..?
 
 Links between pages as necessary - Ya... the pages all link together in the way I want them to.
 
-# Application textual content - I'm not sure what this means... Is it just saying that there should be text in the website? I've definitely got lot's of that.
+Application textual content - I'm not sure what this means... Is it just saying that there should be text in the website? I've definitely got lot's of that.
 
 Placeholder for 3rd party service calls - See div id "output" in EncounterCreatorMain.html
 
-# Application images - Since when were images required for the website?
+Application images - Since when were images required for the website?
 
 Login placeholder, including user name display - See index.html. Also div id "user" in EncounterCreatorMain.html
 
