@@ -52,8 +52,12 @@ table {
 
 th {
     box-sizing: border-box;
-    border-bottom: 1px solid black;
+    border-bottom: 3px solid black;
     background-color: rgba(155, 36, 30, 0.8);
+}
+
+td {
+    background-color: rgba(155, 36, 30, 0.6)
 }
 
 div#output { 
