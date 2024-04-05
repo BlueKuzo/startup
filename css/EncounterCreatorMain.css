@@ -110,7 +110,7 @@ input {
 }
 
 .list p:nth-child(even),
-.list a:nth-child(even) {
+.list a:nth-child(odd){
     padding-top: 1px;
     padding-bottom: 1px;
     padding-left: 10px;
@@ -119,7 +119,7 @@ input {
 }
 
 .list p:nth-child(odd),
-.list a:nth-child(odd) {
+.list a:nth-child(even) {
     padding-top: 1px;
     padding-bottom: 1px;
     padding-left: 10px;
