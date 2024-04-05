@@ -7,122 +7,98 @@
     </head>
     
     <body>
-        <div id="left_column">
-            <table id="parties">
-                <th>Saved Parties</th>
-                <tbody class="newRow">
-                <!-- List of saved parties will be dynamically added here -->
-                    <tr>
-                        <td>Glugnog</td>
-                    </tr>
-                    <tr>
-                        <td>Kaazime and Pals</td>
-                    </tr>
-                    <tr>
-                        <td>Biscuits and Krazy</td>
-                    </tr>
-                    <tr>
-                        <td>Vox Machina</td>
-                    </tr>
-                    <tr>
-                        <td>Mighty Nein</td>
-                    </tr>
-                    <tr>
-                        <td>Bells Hells</td>
-                    </tr>
-                    <tr>
-                        <td>Party 1</td>
-                    </tr>
-                    <tr>
-                        <td>Party 2</td>
-                    </tr>
-                    <tr>
-                        <td>Party 3</td>
-                    </tr>
-                    <tr id="newPartyRow">
-                        <td> + New Party </td>
-                    </tr>
-                </tbody>
-            </table>
-            
-            <table id="encounters">
-                <th>Saved Encounters</th>
-                <tbody id="savedEncountersList">
-                <!-- List of saved encounters will be dynamically added here -->
-                    <tr class="newRow">
-                        <td> + New Encounter </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    
-        <div id="center_column">
-            <table id="party">
-                <th>
-                  <h> Party: </h>
-                  <input id="partyname" placeholder="New Party Name"></input>
-                  <button> SAVE </button>
-                </th>
-
-                <tbody id="partyMembers">
-                <!-- List of party members will be dynamically added here -->
-                    <tr class="newRow">
-                        <td><a href="PCWindow.html">+ New Character</a></td>
-                    </tr>
-                </tbody>
-            </table>
-
-            <table id="encounter">
-                <th>
-                  <h> Encounter: </h>
-                  <input id="encountername" placeholder="New Encounter Name"></input>
-                  <button> SAVE </button>
-                </th> 
-
-                <tbody id="EncounterElements">
-                <!-- List of encounter elements will be dynamically added here -->
-                    <tr class="newRow">
-                        <td><a href="CreatureWindow.html">+ New Character</a></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    
-        <div id="right_column">
-            <div id="output">
-                <div id="overallChallenge" class="output">
-                    <p>Overall Challenge</p>
-                    <div id="overallChallengeResult" class="outputWindow"></div>
+        <div id="columns">
+            <div id="leftColumn">
+                <div id="savedParties" class="table">
+                    <h1> 
+                        <h> Saved Parties </h>
+                    </h1>
+                    <div id="partiesList" class="list">
+                        <p id="newParty" class="new"> + New Party </p>
+                        <!-- List of saved parties will be dynamically added here -->
+                        <p> Glugnog </p>
+                        <p> Kaazime and Pals </p>
+                        <p> Biscuits and Krazy </p>
+                        <p> Vox Machina </p>
+                        <p> The Mighty Nein </p>
+                        <p> Bells Hells </p>
+                    </div>
                 </div>
 
-                <div id="defensiveChallenge" class="output">
-                    <p>Defensive Challenge</p>
-                    <div id="defensiveChallengeResult" class="outputWindow"></div>
+                <div id="savedEncounters" class="table">
+                    <h1> 
+                        <h> Saved Encounters </h>
+                    </h1>
+                    <div id="encountersList" class="list">
+                        <p id="newEncounter" class="new"> + New Encounter </p>
+                        <!-- List of saved encounters will be dynamically added here -->
+                    </div>
                 </div>
-
-                <div id="ofensiveChallenge" class="output">
-                    <p>Offensive Challenge</p>
-                    <div id="offensiveChallengeResult" class="outputWindow"></div>
-                </div>
-
-                <button id="compute"> COMPUTE </button>
             </div>
-            
-            <div id="user">
-                <p>User: <span id="username"></span></p>
-                <button> LOGOUT </button>
-                <a href="index.html"> LOGOUT </a>
 
-                <p></p>
-                <a href="https://github.com/BlueKuzo/startup"> https://github.com/BlueKuzo/startup </a>
-                <p></p>
-                <img alt="D&D" src="https://i.pinimg.com/originals/48/cb/53/48cb5349f515f6e59edc2a4de294f439.png" />
+            <div id="centerColumn">
+                <div id="selectedParty" class="table">
+                    <h1>
+                        <h> Party: </h>
+                        <input id="partyname" placeholder="New Party Name"></input>
+                        <button> SAVE </button>
+                    </h1>
+
+                    <div id="partyList" class="list">
+                        <!-- List of party members will be dynamically added here -->
+                    </div>
+
+                    <a href="PCWindow.html" class="new">+ New Character</a>
+                </div>
+                
+                <div id="selectedEncounter" class="table">
+                    <h1>
+                        <h> Encounter: </h>
+                        <input id="encountername" placeholder="New Encounter Name"></input>
+                        <button> SAVE </button>
+                    </h1>
+
+                    <div id="enemiesList" class="list">
+                        <!-- List of encounter elements will be dynamically added here -->
+                    </div>
+
+                    <a href="CreatureWindow.html" class="new">+ New Enemy</a>
+                </div>
             </div>
+
+            <div id="rightColumn">
+                <div id="output">
+                    <div id="overallChallenge" class="output">
+                        <p>Overall Challenge</p>
+                        <div id="overallChallengeResult" class="outputWindow"></div>
+                    </div>
+    
+                    <div id="defensiveChallenge" class="output">
+                        <p>Defensive Challenge</p>
+                        <div id="defensiveChallengeResult" class="outputWindow"></div>
+                    </div>
+    
+                    <div id="ofensiveChallenge" class="output">
+                        <p>Offensive Challenge</p>
+                        <div id="offensiveChallengeResult" class="outputWindow"></div>
+                    </div>
+    
+                    <button id="compute"> COMPUTE </button>
+                </div>
+                
+                <div id="user">
+                    <p>User: <span id="username"></span></p>
+                    <button> LOGOUT </button>
+                    <a href="index.html"> LOGOUT </a>
+                    <a href="https://github.com/BlueKuzo/startup"> https://github.com/BlueKuzo/startup </a>
+                    <img alt="D&D" src="https://i.pinimg.com/originals/48/cb/53/48cb5349f515f6e59edc2a4de294f439.png" />
+                </div>
+            </div>             
         </div>
+
+        <footer>
+            <span>User31181 created a new encounter!</span>
+            <!-- WebSocket connection here. -->
+        </footer>
     </body>
-
-    <footer>
-        <span>User31181 created a new encounter!</span>
-    </footer>
-    <!-- WebSocket connection here. -->
 </html>
