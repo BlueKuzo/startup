@@ -10,18 +10,49 @@
         <div id="left_column">
             <table id="parties">
                 <th>Saved Parties</th>
-                <tbody id="savedPartiesList">
+                <tbody class="newRow">
                 <!-- List of saved parties will be dynamically added here -->
+                    <tr>
+                        <td>Glugnog</td>
+                    </tr>
+                    <tr>
+                        <td>Kaazime and Pals</td>
+                    </tr>
+                    <tr>
+                        <td>Biscuits and Krazy</td>
+                    </tr>
+                    <tr>
+                        <td>Vox Machina</td>
+                    </tr>
+                    <tr>
+                        <td>Mighty Nein</td>
+                    </tr>
+                    <tr>
+                        <td>Bells Hells</td>
+                    </tr>
+                    <tr>
+                        <td>Party 1</td>
+                    </tr>
+                    <tr>
+                        <td>Party 2</td>
+                    </tr>
+                    <tr>
+                        <td>Party 3</td>
+                    </tr>
+                    <tr id="newPartyRow">
+                        <td> + New Party </td>
+                    </tr>
                 </tbody>
-                <td> + New Party </td>
             </table>
             
             <table id="encounters">
-                <th>Saved Encounters</th>  
+                <th>Saved Encounters</th>
                 <tbody id="savedEncountersList">
                 <!-- List of saved encounters will be dynamically added here -->
+                    <tr class="newRow">
+                        <td> + New Encounter </td>
+                    </tr>
                 </tbody>
-                <td> + New Encounter </td>
             </table>
         </div>
     
@@ -29,24 +60,31 @@
             <table id="party">
                 <th>
                   <h> Party: </h>
-                  <input id="partyname"></input>
+                  <input id="partyname" placeholder="New Party Name"></input>
                   <button> SAVE </button>
                 </th>
+
                 <tbody id="partyMembers">
                 <!-- List of party members will be dynamically added here -->
+                    <tr class="newRow">
+                        <td><a href="PCWindow.html">+ New Character</a></td>
+                    </tr>
                 </tbody>
-                <td><a href="PCWindow.html">+ New Character</a></td>
             </table>
+
             <table id="encounter">
                 <th>
                   <h> Encounter: </h>
-                  <input id="encountername"></input>
+                  <input id="encountername" placeholder="New Encounter Name"></input>
                   <button> SAVE </button>
                 </th> 
+
                 <tbody id="EncounterElements">
                 <!-- List of encounter elements will be dynamically added here -->
+                    <tr class="newRow">
+                        <td><a href="CreatureWindow.html">+ New Character</a></td>
+                    </tr>
                 </tbody>
-                <td><a href="CreatureWindow.html">+ New Character</a></td>
             </table>
         </div>
     
@@ -78,11 +116,13 @@
                 <p></p>
                 <a href="https://github.com/BlueKuzo/startup"> https://github.com/BlueKuzo/startup </a>
                 <p></p>
-                <img alt="D&D" src="https://i.pinimg.com/originals/48/cb/53/48cb5349f515f6e59edc2a4de294f439.png" width="200" />
+                <img alt="D&D" src="https://i.pinimg.com/originals/48/cb/53/48cb5349f515f6e59edc2a4de294f439.png" />
             </div>
         </div>
     </body>
 
-    <footer>... User31181 created a new encounter! ... </footer>
+    <footer>
+        <span>User31181 created a new encounter!</span>
+    </footer>
     <!-- WebSocket connection here. -->
 </html>
