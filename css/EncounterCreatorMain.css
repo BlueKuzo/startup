@@ -1,5 +1,5 @@
 html {
-    background-color: whitesmoke;
+    background-color: rgb(242, 234, 182);
 }
 
 p {
@@ -35,7 +35,6 @@ body {
     padding: 0;
     width: 100%;
     box-sizing: border-box;
-    background-color: rgb(242, 234, 182);
 }
 
 #leftColumn,
