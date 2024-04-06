@@ -1,0 +1,72 @@
+html {
+    background-color: rgb(242, 234, 182);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  
+    border: 2px solid #000;
+    width: fit-content;
+    height: fit-content;
+}
+
+header {
+  padding: 5px;
+  background-color: rgb(178, 35, 28);
+  border-bottom: 2px solid #000;
+}
+
+body {
+    margin: 0;
+    width: 100%;
+    height: fit-content;
+}
+
+#creaturesList {
+    text-transform: uppercase;
+    height: fit-content;
+    max-height: 125px;
+}
+
+footer {
+  padding: 5px;
+  background-color: rgb(178, 35, 28);
+  border-top: 2px solid #000;
+  
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+p {
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+button {
+    margin: 10px;
+    background-color: lightgray;
+    display: inline-block;
+    padding: 5px 10px;
+    cursor: pointer;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+    border-radius: 20px;
+}
+
+#creaturesList p:nth-child(even) {
+    margin: 0;
+    padding-top: 1px;
+    padding-bottom: 1px;
+    padding-left: 10px;
+    background-color: rgb(217, 129, 124);
+    border-bottom: 2px solid gray;
+}
+
+#creaturesList p:nth-child(odd) {
+    margin: 0;
+    padding-top: 1px;
+    padding-bottom: 1px;
+    padding-left: 10px;
+    background-color: rgb(208, 74, 67);
+    border-bottom: 2px solid gray;
+}

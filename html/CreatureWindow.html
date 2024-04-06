@@ -1,17 +1,32 @@
 <html>
-    <body>
-        <input id="characterName"></input>
-        <button> Use Saved Creature </button>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="../css/CharacterWindow.css">
+    </head>
+
+    <header>
+        <input id="characterName" placeholder="Creature Name"></input>
+        <!-- <button> Use Saved Creature </button> -->
         <a href="creatureList.html">Use Saved Creature</a>
+    </header>
+
+    <body>
         <p> Number: <input id="number"></input></p>
         <p> AC: <input id="AC"></input></p>
         <p> Hit Points: <input id="HP"></input></p>
         <p> Attack Bonus: <input id="attack"></input></p>
         <p> Save DC: <input id="DC"></input></p>
         <p> Average Damage: <input id="damage"></input></p>
-        <button> SAVE </button>
-        <button> DELETE </button>
-        <button> CANCEL </button>
     </body>
-    <footer><a href="EncounterCreatorMain.html">Return</a></footer>
+
+    <footer>
+        <div>
+            <button> SAVE </button>
+            <button> DELETE </button>
+            <button> CANCEL </button>
+        </div>
+        <a href="EncounterCreatorMain.html">Return</a>
+    </footer>
+
 </html>
