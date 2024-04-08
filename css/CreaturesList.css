@@ -25,6 +25,7 @@ body {
 #creaturesList {
     text-transform: uppercase;
     height: fit-content;
+    overflow-y: auto;
     max-height: 125px;
 }
 

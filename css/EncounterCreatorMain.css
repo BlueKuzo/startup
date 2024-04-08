@@ -50,21 +50,17 @@ body {
     justify-content: space-between;
 }
 
-#leftColumn {
-    overflow-y: auto;
-}
-
 #centerColumn {
     flex: 4;
-    overflow-y: auto;
 }
 
 #rightColumn {
     border-right: 3px solid black;
 }
 
-.table {
+.list {
     flex: 1;
+    overflow-y: auto;
 }
 
 #savedParties,
