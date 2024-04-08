@@ -45,3 +45,18 @@ Login placeholder, including user name display - See index.html. Also div id "us
 Database data placeholder showing content stored in the database - Several spots with this. See table id "parties" and "encounters" in EncounterCreatorMain.html
 
 WebSocket data placeholder showing where realtime communication will go - Footer in EncounterCreatorMain.html
+
+
+# CSS Assignment
+
+Header, footer, and main content body - Everything is as expected.
+
+Navigation elements - Use the links. I think the buttons get activated in the next assignment.
+
+Responsive to window resizing - Most apparent on EncounterCreatorMain.
+
+Application elements - Yup; got what I wanted.
+
+Application text content - The text is all there.
+
+Application images - It scales as desired.
