@@ -14,22 +14,92 @@ document.addEventListener("DOMContentLoaded", function() {
 
 // Define party data in a single object
 const partiesData = {
-    "Glugnog": ["Spectrum", "Gnorbert", "Barystios", "Kia"],
-    "Kaazime and Pals": ["Kaazime", "Jandar, the Forgotten", "Leika", "Cassius", "Feld", "Nova"],
-    "Biscuits and Kwazy": ["Branwyn", "Teddy", "Mabel", "Luna"],
-    "Vox Machina": ["Vex", "Vax", "Scanlan", "Grog", "Pike", "Percy", "Keyleth"],
-    "The Mighty Nein": ["Caleb", "Jester", "Fjord", "Nott", "Caduceus", "Beauregard", "Yasha"],
-    "Bells Hells": ["Ashton", "FCG", "Chetney", "Dorian", "Fearne", "Imogen", "Laudna"],
-    "Whimsical Wanderers": ["Ariadne", "Thalian", "Grimnir", "Lyra", "Sorin"]
+    "Glugnog": [
+        { name: "Spectrum", level: 7, class: "Cleric" },
+        { name: "Gnorbert", level: 7, class: "Sorcerer" },
+        { name: "Barystios", level: 7, class: "Barbarian" },
+        { name: "Kia", level: 7, class: "Monk" }
+    ],
+    "Kaazime and Pals": [
+        { name: "Kaazime", level: 10, class: "Warlock" },
+        { name: "Jandar, the Forgotten", level: 10, class: "Ranger" },
+        { name: "Leika", level: 10, class: "Fighter" },
+        { name: "Cassius", level: 10, class: "Cleric" },
+        { name: "Feld", level: 10, class: "Paladin" },
+        { name: "Nova", level: 10, class: "Rogue" }
+    ],
+    "Biscuits and Kwazy": [
+        { name: "Branwyn", level: 3, class: "Paladin" },
+        { name: "Teddy", level: 3, class: "Fighter" },
+        { name: "Mabel", level: 3, class: "Cleric" },
+        { name: "Luna", level: 3, class: "Wizard" }
+    ],
+    "Vox Machina": [
+        { name: "Vex", level: 13, class: "Multiclass" },
+        { name: "Vax", level: 13, class: "Ranger" },
+        { name: "Scanlan", level: 13, class: "Bard" },
+        { name: "Grog", level: 13, class: "Barbarian" },
+        { name: "Pike", level: 13, class: "Cleric" },
+        { name: "Percy", level: 13, class: "Fighter" },
+        { name: "Keyleth", level: 13, class: "Druid" }
+    ],
+    "The Mighty Nein": [
+        { name: "Caleb", level: 9, class: "Wizard" },
+        { name: "Jester", level: 9, class: "Cleric" },
+        { name: "Fjord", level: 9, class: "Warlock" },
+        { name: "Nott", level: 9, class: "Rogue" },
+        { name: "Caduceus", level: 9, class: "Cleric" },
+        { name: "Beauregard", level: 9, class: "Monk" },
+        { name: "Yasha", level: 9, class: "Barbarian" }
+    ],
+    "Bells Hells": [
+        { name: "Ashton", level: 4, class: "Barbarian" },
+        { name: "FCG", level: 4, class: "Cleric" },
+        { name: "Chetney", level: 4, class: "Rogue" },
+        { name: "Dorian", level: 4, class: "Bard" },
+        { name: "Fearne", level: 4, class: "Druid" },
+        { name: "Imogen", level: 4, class: "Sorcerer" },
+        { name: "Laudna", level: 4, class: "Warlock" }
+    ],
+    "Whimsical Wanderers": [
+        { name: "Ariadne", level: 1, class: "Paladin" },
+        { name: "Thalian", level: 1, class: "Warlock" },
+        { name: "Grimnir", level: 1, class: "Druid" },
+        { name: "Lyra", level: 1, class: "Brawler" },
+        { name: "Sorin", level: 1, class: "Fighter" }
+    ]
 };
 
 // Define encounter data in a single object
-const encountersData = {
-    "Troll Surprise": ["Troll", "Goblin Boss", "Goblin"],
-    "Yiga Ambush": ["Yiga Footsoldier", "Viga Archer"],
-    "Kohga": ["Master Kohga", "Yiga Footsoldier", "Viga Archer", "Yiga Blademaster"],
+const encountersDataOld = {
     "Mummies": ["Mummy"],
     "Water Crater": ["Water Elemental", "Earth Elemental", "Mud Elemental"]
+};
+
+const encountersData = {
+    "Troll Surprise": [
+        { name: "Troll", quantity: 1, AC: 15, HP: 84, attackBonus: 7, saveDC: null, avgDamage: 28 },
+        { name: "Goblin Boss", quantity: 1, AC: 17, HP: 21, attackBonus: 4, saveDC: null, avgDamage: 8 },
+        { name: "Goblin", quantity: 8, AC: 15, HP: 7, attackBonus: 4, saveDC: null, avgDamage: 5 }
+    ],
+    "Yiga Ambush": [
+        { name: "Yiga Footsoldier", quantity: 3, AC: 14, HP: 52, attackBonus: 5, saveDC: 13, avgDamage: 14 },
+        { name: "Viga Archer", quantity: 3, AC: 14, HP: 52, attackBonus: 5, saveDC: 11, avgDamage: 14 }
+    ],
+    "Kohga": [
+        { name: "Master Kohga", quantity: 1, AC: 18, HP: 127, attackBonus: 9, saveDC: 17, avgDamage: 12 },
+        { name: "Yiga Footsoldier", quantity: 3, AC: 14, HP: 52, attackBonus: 5, saveDC: 13, avgDamage: 14 },
+        { name: "Viga Archer", quantity: 3, AC: 14, HP: 52, attackBonus: 5, saveDC: 11, avgDamage: 14 },
+        { name: "Viga Blademaster", quantity: 1, AC: 16, HP: 84, attackBonus: 7, saveDC: 15, avgDamage: 20 }
+    ],
+    "Mummies": [
+        { name: "Mummy", quantity: 6, AC: 11, HP: 58, attackBonus: 5, saveDC: 12, avgDamage: 20 }
+    ],
+    "Water Crater": [
+        { name: "Water Elemental", quantity: 2, AC: 14, HP: 114, attackBonus: 7, saveDC: 15, avgDamage: 26 },
+        { name: "Earth Elemental", quantity: 2, AC: 17, HP: 126, attackBonus: 8, saveDC: null, avgDamage: 28 },
+        { name: "Mud Elemental", quantity: 8, AC: 14, HP: 61, attackBonus: 6, saveDC: null, avgDamage: 12 }
+    ]
 };
 
 function fetchParties() {
@@ -86,7 +156,7 @@ function createNewPartyElement() {
         partyList.innerHTML = ""; // Clear existing list
 
         // Add option to create a new character
-        partyList.appendChild(addCharacter("+ New Character"));
+        partyList.appendChild(addNewCharacterOption());
     });
 
     return NewPartyElement;
@@ -104,10 +174,10 @@ function createPartyElement(partyName){
         partyList.innerHTML = ""; // Clear existing list
 
         // Add option to create a new character
-        partyList.appendChild(addCharacter("+ New Character"));
+        partyList.appendChild(addNewCharacterOption());
 
-        partiesData[partyName].forEach(characterName => {
-            partyList.appendChild(addCharacter(characterName));
+        partiesData[partyName].forEach(character => {
+            partyList.appendChild(addCharacter(character.name, character.level, character.class));
         });
     });
 
@@ -126,7 +196,7 @@ function createNewEncounterElement() {
         enemiesList.innerHTML = ""; // Clear existing list
 
         // Add option to create a new enemy
-        enemiesList.appendChild(addEnemy("+ New Enemy"));
+        enemiesList.appendChild(addNewEnemyOption());
     });
 
     return newEncounterElement;
@@ -144,26 +214,40 @@ function createEncounterElement(encounterName) {
         enemiesList.innerHTML = ""; // Clear existing list
 
         // Add option to create a new enemy
-        enemiesList.appendChild(addEnemy("+ New Enemy"));
+        enemiesList.appendChild(addNewEnemyOption());
 
-        encountersData[encounterName].forEach(enemyName => {
-            enemiesList.appendChild(addEnemy(enemyName));
+        encountersData[encounterName].forEach(enemy => {
+            enemiesList.appendChild(addEnemy(enemy.name, enemy.quantity));
         });
     });
 
     return encounterElement;
 }
 
-function addCharacter(characterName) {
+function addNewCharacterOption() {
     const NewCharacter = document.createElement("p");
-    NewCharacter.textContent = characterName;
+    NewCharacter.textContent = "+ New Character";
 
     return NewCharacter;
 }
 
-function addEnemy(enemyName) {
+function addCharacter(characterName, characterLevel, characterClass) {
+    const newCharacter = document.createElement("p");
+    newCharacter.textContent = `${characterName} Level: ${characterLevel} Class: ${characterClass}`;
+
+    return newCharacter;
+}
+
+function addNewEnemyOption() {
     const newEnemy = document.createElement("p");
-    newEnemy.textContent = enemyName;
+    newEnemy.textContent = "+ New Enemy";
+
+    return newEnemy;
+}
+
+function addEnemy(enemyName, quantity) {
+    const newEnemy = document.createElement("p");
+    newEnemy.textContent = `${enemyName} (${quantity})`;
 
     return newEnemy;
 }
