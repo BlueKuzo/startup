@@ -10,6 +10,9 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // Simulate click on "New Encounter" to initialize the encounter list
     document.querySelector("#encountersList p").click();
+
+    // Populate the username
+    document.getElementById("username").textContent = "BlueKuzo";
 });
 
 // Define party data in a single object
@@ -148,6 +151,8 @@ function createNewPartyElement() {
     const NewPartyElement = document.createElement("p");
     NewPartyElement.textContent = "+ New Party";
     NewPartyElement.addEventListener("click", function() {
+        clearOutputWindows();
+
         // Reset partyname input field
         document.getElementById("partyname").value = "";
 
@@ -166,6 +171,8 @@ function createPartyElement(partyName){
     const partyElement = document.createElement("p");
     partyElement.textContent = partyName;
     partyElement.addEventListener("click", function() {
+        clearOutputWindows();
+
         // Fill party name input field
         document.getElementById("partyname").value = partyName;
 
@@ -188,6 +195,8 @@ function createNewEncounterElement() {
     const newEncounterElement = document.createElement("p");
     newEncounterElement.textContent = "+ New Encounter";
     newEncounterElement.addEventListener("click", function() {
+        clearOutputWindows();
+
         // Reset encounter name input field
         document.getElementById("encountername").value = "";
 
@@ -206,6 +215,8 @@ function createEncounterElement(encounterName) {
     const encounterElement = document.createElement("p");
     encounterElement.textContent = encounterName;
     encounterElement.addEventListener("click", function() {
+        clearOutputWindows();
+
         // Fill encounter name input field
         document.getElementById("encountername").value = encounterName;
 
@@ -236,7 +247,7 @@ function addNewCharacterOption() {
 
 function addCharacter(characterName, characterLevel, characterClass) {
     const newCharacter = document.createElement("p");
-    newCharacter.textContent = `${characterName} Level: ${characterLevel} Class: ${characterClass}`;
+    newCharacter.textContent = `${characterName}   |   Level: ${characterLevel}   |   Class: ${characterClass}`;
     newCharacter.addEventListener("click", function() {
         handleCharacterClick(characterName);
     });
@@ -298,4 +309,35 @@ function handleEnemyClick(enemyName) {
             enemyWindow.document.getElementById("damage").value = enemyData.avgDamage || "";
         }
     };
+}
+
+// Add event listener to the "compute" button
+document.getElementById("compute").addEventListener("click", function() {
+    // Check if both party and encounter are selected
+    const selectedParty = document.getElementById("partyname").value;
+    const selectedEncounter = document.getElementById("encountername").value;
+
+    if (selectedParty && selectedEncounter) {
+        // Array of possible options
+        const options = ["boring", "easy", "medium", "hard", "deadly"];
+
+        // Randomly select an option for each output window
+        const overallChallengeResult = options[Math.floor(Math.random() * options.length)];
+        const defensiveChallengeResult = options[Math.floor(Math.random() * options.length)];
+        const offensiveChallengeResult = options[Math.floor(Math.random() * options.length)];
+
+        // Display the results in the output windows
+        document.getElementById("overallChallengeResult").textContent = overallChallengeResult;
+        document.getElementById("defensiveChallengeResult").textContent = defensiveChallengeResult;
+        document.getElementById("offensiveChallengeResult").textContent = offensiveChallengeResult;
+    } else {
+        // If either party or encounter is not selected, display an error message
+        alert("Please select both a party and an encounter.");
+    }
+});
+
+function clearOutputWindows() {
+    document.getElementById("overallChallengeResult").textContent = "";
+    document.getElementById("defensiveChallengeResult").textContent = "";
+    document.getElementById("offensiveChallengeResult").textContent = "";
 }
