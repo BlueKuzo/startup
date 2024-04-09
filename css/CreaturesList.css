@@ -71,3 +71,7 @@ button {
     background-color: rgb(208, 74, 67);
     border-bottom: 2px solid gray;
 }
+
+p {
+  cursor: pointer;
+}
