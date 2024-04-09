@@ -1,8 +1,11 @@
 document.addEventListener("DOMContentLoaded", function() {
-    const characterName = document.getElementById("characterName").value;
-    const race = document.getElementById("race").value;
-    const level = document.getElementById("level").value;
-    const characterClass = document.getElementById("class").value;
+    const characterNameInput = document.getElementById("characterName");
+    const numberInput = document.getElementById("number");
+    const ACInput = document.getElementById("AC");
+    const HPInput = document.getElementById("HP");
+    const attackInput = document.getElementById("attack");
+    const DCInput = document.getElementById("DC");
+    const damageInput = document.getElementById("damage");
 
     const saveButton = document.getElementById("save");
     const deleteButton = document.getElementById("delete");
@@ -29,3 +32,7 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 });
+
+function navigateToCreatureList() {
+    window.location.href = "creatureList.html";
+}
