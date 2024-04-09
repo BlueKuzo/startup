@@ -13,6 +13,12 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // Populate the username
     document.getElementById("username").textContent = "BlueKuzo";
+
+    // Add event listener to the logout button
+    document.getElementById("logout").addEventListener("click", function() {
+        // Navigate to ../index.html
+        window.location.href = "../index.html";
+    });
 });
 
 // Define party data in a single object
@@ -284,10 +290,7 @@ function handleCharacterClick(characterName) {
     characterWindow.onload = function() {
         const characterData = partiesData[characterName];
         if (characterData) {
-            characterWindow.document.getElementById("characterName").value = characterName;
-            characterWindow.document.getElementById("race").value = characterData.race || "";
-            characterWindow.document.getElementById("level").value = characterData.level || "";
-            characterWindow.document.getElementById("class").value = characterData.class || "";
+            characterWindow.characterData = characterData; // Pass characterData to the new window
         }
     };
 }
