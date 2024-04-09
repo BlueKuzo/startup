@@ -15,58 +15,58 @@ document.addEventListener("DOMContentLoaded", function() {
 // Define party data in a single object
 const partiesData = {
     "Glugnog": [
-        { name: "Spectrum", level: 7, class: "Cleric" },
-        { name: "Gnorbert", level: 7, class: "Sorcerer" },
-        { name: "Barystios", level: 7, class: "Barbarian" },
-        { name: "Kia", level: 7, class: "Monk" }
+        { name: "Spectrum", race: "Fire Genasi", level: 7, class: "Cleric" },
+        { name: "Gnorbert", race: "Gnome", level: 7, class: "Sorcerer" },
+        { name: "Barystios", race: "Centaur", level: 7, class: "Barbarian" },
+        { name: "Kia", race: "Wood Elf", level: 7, class: "Monk" }
     ],
     "Kaazime and Pals": [
-        { name: "Kaazime", level: 10, class: "Warlock" },
-        { name: "Jandar, the Forgotten", level: 10, class: "Ranger" },
-        { name: "Leika", level: 10, class: "Fighter" },
-        { name: "Cassius", level: 10, class: "Cleric" },
-        { name: "Feld", level: 10, class: "Paladin" },
-        { name: "Nova", level: 10, class: "Rogue" }
+        { name: "Kaazime", race: "Air Genasi", level: 10, class: "Warlock" },
+        { name: "Jandar, the Forgotten", race: "High Elf", level: 10, class: "Ranger" },
+        { name: "Leika", race: "Human", level: 10, class: "Fighter" },
+        { name: "Cassius", race: "Half-elf", level: 10, class: "Cleric" },
+        { name: "Feld", race: "Dwarf", level: 10, class: "Paladin" },
+        { name: "Nova", race: "Human", level: 10, class: "Rogue" }
     ],
     "Biscuits and Kwazy": [
-        { name: "Branwyn", level: 3, class: "Paladin" },
-        { name: "Teddy", level: 3, class: "Fighter" },
-        { name: "Mabel", level: 3, class: "Cleric" },
-        { name: "Luna", level: 3, class: "Wizard" }
+        { name: "Branwyn", race: "Human", level: 3, class: "Paladin" },
+        { name: "Teddy", race: "Tabaxi", level: 3, class: "Fighter" },
+        { name: "Mabel", race: "Wood Elf", level: 3, class: "Cleric" },
+        { name: "Luna", race: "Warforged", level: 3, class: "Wizard" }
     ],
     "Vox Machina": [
-        { name: "Vex", level: 13, class: "Multiclass" },
-        { name: "Vax", level: 13, class: "Ranger" },
-        { name: "Scanlan", level: 13, class: "Bard" },
-        { name: "Grog", level: 13, class: "Barbarian" },
-        { name: "Pike", level: 13, class: "Cleric" },
-        { name: "Percy", level: 13, class: "Fighter" },
-        { name: "Keyleth", level: 13, class: "Druid" }
+        { name: "Vex", race: "Half-elf", level: 13, class: "Multiclass" },
+        { name: "Vax", race: "Half-elf", level: 13, class: "Ranger" },
+        { name: "Scanlan", race: "Gnome", level: 13, class: "Bard" },
+        { name: "Grog", race: "Goliath", level: 13, class: "Barbarian" },
+        { name: "Pike", race: "Gnome", level: 13, class: "Cleric" },
+        { name: "Percy", race: "Human", level: 13, class: "Fighter" },
+        { name: "Keyleth", race: "Half-elf", level: 13, class: "Druid" }
     ],
     "The Mighty Nein": [
-        { name: "Caleb", level: 9, class: "Wizard" },
-        { name: "Jester", level: 9, class: "Cleric" },
-        { name: "Fjord", level: 9, class: "Warlock" },
-        { name: "Nott", level: 9, class: "Rogue" },
-        { name: "Caduceus", level: 9, class: "Cleric" },
-        { name: "Beauregard", level: 9, class: "Monk" },
-        { name: "Yasha", level: 9, class: "Barbarian" }
+        { name: "Caleb", race: "Human", level: 9, class: "Wizard" },
+        { name: "Jester", race: "Tiefling", level: 9, class: "Cleric" },
+        { name: "Fjord", race: "Half-orc", level: 9, class: "Warlock" },
+        { name: "Nott", race: "Goblin", level: 9, class: "Rogue" },
+        { name: "Caduceus", race: "Firbolg", level: 9, class: "Cleric" },
+        { name: "Beauregard", race: "Human", level: 9, class: "Monk" },
+        { name: "Yasha", race: "Assimar", level: 9, class: "Barbarian" }
     ],
     "Bells Hells": [
-        { name: "Ashton", level: 4, class: "Barbarian" },
-        { name: "FCG", level: 4, class: "Cleric" },
-        { name: "Chetney", level: 4, class: "Rogue" },
-        { name: "Dorian", level: 4, class: "Bard" },
-        { name: "Fearne", level: 4, class: "Druid" },
-        { name: "Imogen", level: 4, class: "Sorcerer" },
-        { name: "Laudna", level: 4, class: "Warlock" }
+        { name: "Ashton", race: "Human", level: 4, class: "Barbarian" },
+        { name: "FCG", race: "Warforged", level: 4, class: "Cleric" },
+        { name: "Chetney", race: "Human", level: 4, class: "Rogue" },
+        { name: "Dorian", race: "Human", level: 4, class: "Bard" },
+        { name: "Fearne", race: "Human", level: 4, class: "Druid" },
+        { name: "Imogen", race: "Human", level: 4, class: "Sorcerer" },
+        { name: "Laudna", race: "Human", level: 4, class: "Warlock" }
     ],
     "Whimsical Wanderers": [
-        { name: "Ariadne", level: 1, class: "Paladin" },
-        { name: "Thalian", level: 1, class: "Warlock" },
-        { name: "Grimnir", level: 1, class: "Druid" },
-        { name: "Lyra", level: 1, class: "Brawler" },
-        { name: "Sorin", level: 1, class: "Fighter" }
+        { name: "Ariadne", race: "Human", level: 1, class: "Paladin" },
+        { name: "Thalian", race: "Human", level: 1, class: "Warlock" },
+        { name: "Grimnir", race: "Human", level: 1, class: "Druid" },
+        { name: "Lyra", race: "Human", level: 1, class: "Brawler" },
+        { name: "Sorin", race: "Human", level: 1, class: "Fighter" }
     ]
 };
 
@@ -225,15 +225,21 @@ function createEncounterElement(encounterName) {
 }
 
 function addNewCharacterOption() {
-    const NewCharacter = document.createElement("p");
-    NewCharacter.textContent = "+ New Character";
+    const newCharacter = document.createElement("p");
+    newCharacter.textContent = "+ New Character";
+    newCharacter.addEventListener("click", function() {
+        handleCharacterClick(null);
+    });
 
-    return NewCharacter;
+    return newCharacter;
 }
 
 function addCharacter(characterName, characterLevel, characterClass) {
     const newCharacter = document.createElement("p");
     newCharacter.textContent = `${characterName} Level: ${characterLevel} Class: ${characterClass}`;
+    newCharacter.addEventListener("click", function() {
+        handleCharacterClick(characterName);
+    });
 
     return newCharacter;
 }
@@ -241,6 +247,9 @@ function addCharacter(characterName, characterLevel, characterClass) {
 function addNewEnemyOption() {
     const newEnemy = document.createElement("p");
     newEnemy.textContent = "+ New Enemy";
+    newEnemy.addEventListener("click", function() {
+        handleEnemyClick(null);
+    });
 
     return newEnemy;
 }
@@ -248,6 +257,45 @@ function addNewEnemyOption() {
 function addEnemy(enemyName, quantity) {
     const newEnemy = document.createElement("p");
     newEnemy.textContent = `${enemyName} (${quantity})`;
+    newEnemy.addEventListener("click", function() {
+        handleEnemyClick(enemyName);
+    });
 
     return newEnemy;
+}
+
+// Function to handle click event on characters in the party list
+function handleCharacterClick(characterName) {
+    // Open a popup window to display the character's data
+    const characterWindow = window.open("PCWindow.html", "Character Window", "width=fit-content, height=fit-content");
+    
+    // Load character's data into the popup window
+    characterWindow.onload = function() {
+        const characterData = partiesData[characterName];
+        if (characterData) {
+            characterWindow.document.getElementById("characterName").value = characterName;
+            characterWindow.document.getElementById("race").value = characterData.race || "";
+            characterWindow.document.getElementById("level").value = characterData.level || "";
+            characterWindow.document.getElementById("class").value = characterData.class || "";
+        }
+    };
+}
+
+function handleEnemyClick(enemyName) {
+    // Open a popup window to display the enemy's data
+    const enemyWindow = window.open("CreatureWindow.html", "Enemy Window", "width=fit-content, height=fit-content");
+    
+    // Load enemy's data into the popup window
+    enemyWindow.onload = function() {
+        const enemyData = encountersData[enemyName];
+        if (enemyData) {
+            enemyWindow.document.getElementById("characterName").value = enemyName;
+            enemyWindow.document.getElementById("number").value = enemyData.quantity || "";
+            enemyWindow.document.getElementById("AC").value = enemyData.AC || "";
+            enemyWindow.document.getElementById("HP").value = enemyData.HP || "";
+            enemyWindow.document.getElementById("attack").value = enemyData.attackBonus || "";
+            enemyWindow.document.getElementById("DC").value = enemyData.saveDC || "";
+            enemyWindow.document.getElementById("damage").value = enemyData.avgDamage || "";
+        }
+    };
 }
