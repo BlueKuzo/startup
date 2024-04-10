@@ -66,8 +66,8 @@ Application images - It scales as desired.
 
 JavaScript support for future login - see login.js
 
-JavaScript support for future database data - see... pretty much any page. Maybe not login.js
+JavaScript support for future database data - EncounterCreatorMain.js has two main sections of dummy data: partiesData and encountersData.
 
-JavaScript support for future WebSocket - see EncounterCreatorMain.js
+JavaScript support for future WebSocket - EncounterCreatorMain.js mimics a WebSocket update in the setTimeout function.
 
-JavaScript support for your application's functionality - Yup. All over the place.
+JavaScript support for your application's functionality - There's quite a bit. As a single example, in EncounterCreatorMain, clicking on a party or encounter loads the data to the middle of the page.

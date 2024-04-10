@@ -19,31 +19,16 @@ document.addEventListener("DOMContentLoaded", function() {
         // Navigate to ../index.html
         window.location.href = "../index.html";
     });
-    
-    // Initialize WebSocket connection
-    const socket = new WebSocket("ws://example.com/socket"); // Replace with actual WebSocket URL
-
-    // Event listener for WebSocket connection opened
-    socket.addEventListener("open", function(event) {
-        console.log("WebSocket connected");
-    });
-
-    // Event listener for WebSocket messages received
-    socket.addEventListener("message", function(event) {
-        // Update the content of the footer span with the received data
-        document.querySelector("footer span").textContent = event.data;
-    });
-
-    // Event listener for WebSocket connection closed
-    socket.addEventListener("close", function(event) {
-        console.log("WebSocket disconnected");
-    });
 
     // Simulate WebSocket update after a random time interval
     setTimeout(function() {
         const updateMessage = "User31181 created a new encounter!";
         // Update the content of the footer span
-        document.querySelector("footer span").textContent = updateMessage;
+        const parent = document.querySelector("footer");
+        span = document.createElement("span");
+        span.textContent = updateMessage;
+        parent.appendChild(span);
+
         // If WebSocket is open, send the update to the server
         if (socket.readyState === WebSocket.OPEN) {
             socket.send(updateMessage);
@@ -213,7 +198,7 @@ const partiesData = {
         { name: "Imogen", race: "Human", level: 4, class: "Sorcerer" },
         { name: "Laudna", race: "Human", level: 4, class: "Warlock" }
     ],
-    "Whimsical Wanderers ": [
+    "Whimsical Wanderers 3": [
         { name: "Ariadne", race: "Human", level: 1, class: "Paladin" },
         { name: "Thalian", race: "Human", level: 1, class: "Warlock" },
         { name: "Grimnir", race: "Human", level: 1, class: "Druid" },
@@ -247,7 +232,7 @@ const encountersData = {
         { name: "Earth Elemental", quantity: 2, AC: 17, HP: 126, attackBonus: 8, saveDC: null, avgDamage: 28 },
         { name: "Mud Elemental", quantity: 8, AC: 14, HP: 61, attackBonus: 6, saveDC: null, avgDamage: 12 }
     ],
-    "Troll Surprise 2": [
+        "Troll Surprise 2": [
         { name: "Troll", quantity: 1, AC: 15, HP: 84, attackBonus: 7, saveDC: null, avgDamage: 28 },
         { name: "Goblin Boss", quantity: 1, AC: 17, HP: 21, attackBonus: 4, saveDC: null, avgDamage: 8 },
         { name: "Goblin", quantity: 8, AC: 15, HP: 7, attackBonus: 4, saveDC: null, avgDamage: 5 }
@@ -293,6 +278,7 @@ const encountersData = {
         { name: "Earth Elemental", quantity: 2, AC: 17, HP: 126, attackBonus: 8, saveDC: null, avgDamage: 28 },
         { name: "Mud Elemental", quantity: 8, AC: 14, HP: 61, attackBonus: 6, saveDC: null, avgDamage: 12 }
     ]
+
 };
 
 function fetchParties() {
