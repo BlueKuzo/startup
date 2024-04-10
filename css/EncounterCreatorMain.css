@@ -15,6 +15,7 @@ button {
     cursor: pointer;
     box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
     border-radius: 20px;
+    display: inline-block;
 }
 
 input {
@@ -231,7 +232,7 @@ footer span {
     background-color: rgb(242, 234, 182);
 
     border: 2px solid #000;
-    width: min-content;
+    width: fit-content;
     height: max-content;
     position: absolute;
     top: 50%;
@@ -248,11 +249,18 @@ footer span {
     background-color: rgb(178, 35, 28);
     border-bottom: 2px solid #000;
     width: 100%;
+
+    display: flex;
+    flex-direction: row;
 }
 
 .overlay_content header input {
+    flex: 1;
     margin: 5px;
-    width: 95%;
+}
+
+#savedCreatureButton {
+    margin: 5px;
 }
 
 #overlay_body {
@@ -266,12 +274,11 @@ footer span {
 }
 
 .overlay_content footer {
-    padding: 5px;
     background-color: rgb(178, 35, 28);
     border-top: 2px solid #000;
   
     display: flex;
     flex-direction: row;
-    align-items: center;
-    width: fit-content;
+    justify-content: center;
+    width: 100%;
 }

@@ -104,6 +104,30 @@
             </div>
         </div>
 
+        <div id="Enemy_Overlay" class="overlay">
+            <div class="overlay_content">
+                <header>
+                    <input id="enemyName" placeholder="Enemy Name"></input>
+                    <button id="savedCreatureButton"> Use Saved Creature </button>
+                </header>
+            
+                <div id="overlay_body">
+                    <p> Number: <input id="enemyQuantity"></input></p>
+                    <p> AC: <input id="enemyAC"></input></p>
+                    <p> Hit Points: <input id="enemyHP"></input></p>
+                    <p> Attack Bonus: <input id="enemyAttackBonus"></input></p>
+                    <p> Save DC: <input id="enemySaveDC"></input></p>
+                    <p> Average Damage: <input id="enemyAvgDamage"></input></p>
+                </div>
+                
+                <footer>
+                    <button id="saveEnemy"> SAVE </button>
+                    <button id="deleteEnemy"> DELETE </button>
+                    <button id="cancelEnemy"> CANCEL </button>
+                </footer>
+            </div>
+        </div>
+
         <footer id="WebSocketDisplay">
             <!-- WebSocket connection here. -->
         </footer>

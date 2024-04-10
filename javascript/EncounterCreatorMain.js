@@ -210,9 +210,9 @@ const partiesData = {
 // Define encounter data in a single object
 const encountersData = {
     "Troll Surprise": [
-        { name: "Troll", quantity: 1, AC: 15, HP: 84, attackBonus: 7, saveDC: null, avgDamage: 28 },
-        { name: "Goblin Boss", quantity: 1, AC: 17, HP: 21, attackBonus: 4, saveDC: null, avgDamage: 8 },
-        { name: "Goblin", quantity: 8, AC: 15, HP: 7, attackBonus: 4, saveDC: null, avgDamage: 5 }
+        { name: "Troll", quantity: 1, AC: 15, HP: 84, attackBonus: 7, saveDC: '', avgDamage: 28 },
+        { name: "Goblin Boss", quantity: 1, AC: 17, HP: 21, attackBonus: 4, saveDC: '', avgDamage: 8 },
+        { name: "Goblin", quantity: 8, AC: 15, HP: 7, attackBonus: 4, saveDC: '', avgDamage: 5 }
     ],
     "Yiga Ambush": [
         { name: "Yiga Footsoldier", quantity: 3, AC: 14, HP: 52, attackBonus: 5, saveDC: 13, avgDamage: 14 },
@@ -229,13 +229,13 @@ const encountersData = {
     ],
     "Water Crater": [
         { name: "Water Elemental", quantity: 2, AC: 14, HP: 114, attackBonus: 7, saveDC: 15, avgDamage: 26 },
-        { name: "Earth Elemental", quantity: 2, AC: 17, HP: 126, attackBonus: 8, saveDC: null, avgDamage: 28 },
-        { name: "Mud Elemental", quantity: 8, AC: 14, HP: 61, attackBonus: 6, saveDC: null, avgDamage: 12 }
+        { name: "Earth Elemental", quantity: 2, AC: 17, HP: 126, attackBonus: 8, saveDC: '', avgDamage: 28 },
+        { name: "Mud Elemental", quantity: 8, AC: 14, HP: 61, attackBonus: 6, saveDC: '', avgDamage: 12 }
     ],
         "Troll Surprise 2": [
-        { name: "Troll", quantity: 1, AC: 15, HP: 84, attackBonus: 7, saveDC: null, avgDamage: 28 },
-        { name: "Goblin Boss", quantity: 1, AC: 17, HP: 21, attackBonus: 4, saveDC: null, avgDamage: 8 },
-        { name: "Goblin", quantity: 8, AC: 15, HP: 7, attackBonus: 4, saveDC: null, avgDamage: 5 }
+        { name: "Troll", quantity: 1, AC: 15, HP: 84, attackBonus: 7, saveDC: '', avgDamage: 28 },
+        { name: "Goblin Boss", quantity: 1, AC: 17, HP: 21, attackBonus: 4, saveDC: '', avgDamage: 8 },
+        { name: "Goblin", quantity: 8, AC: 15, HP: 7, attackBonus: 4, saveDC: '', avgDamage: 5 }
     ],
     "Yiga Ambush 2": [
         { name: "Yiga Footsoldier", quantity: 3, AC: 14, HP: 52, attackBonus: 5, saveDC: 13, avgDamage: 14 },
@@ -252,13 +252,13 @@ const encountersData = {
     ],
     "Water Crater 2": [
         { name: "Water Elemental", quantity: 2, AC: 14, HP: 114, attackBonus: 7, saveDC: 15, avgDamage: 26 },
-        { name: "Earth Elemental", quantity: 2, AC: 17, HP: 126, attackBonus: 8, saveDC: null, avgDamage: 28 },
-        { name: "Mud Elemental", quantity: 8, AC: 14, HP: 61, attackBonus: 6, saveDC: null, avgDamage: 12 }
+        { name: "Earth Elemental", quantity: 2, AC: 17, HP: 126, attackBonus: 8, saveDC: '', avgDamage: 28 },
+        { name: "Mud Elemental", quantity: 8, AC: 14, HP: 61, attackBonus: 6, saveDC: '', avgDamage: 12 }
     ],
     "Troll Surprise 3": [
-        { name: "Troll", quantity: 1, AC: 15, HP: 84, attackBonus: 7, saveDC: null, avgDamage: 28 },
-        { name: "Goblin Boss", quantity: 1, AC: 17, HP: 21, attackBonus: 4, saveDC: null, avgDamage: 8 },
-        { name: "Goblin", quantity: 8, AC: 15, HP: 7, attackBonus: 4, saveDC: null, avgDamage: 5 }
+        { name: "Troll", quantity: 1, AC: 15, HP: 84, attackBonus: 7, saveDC: '', avgDamage: 28 },
+        { name: "Goblin Boss", quantity: 1, AC: 17, HP: 21, attackBonus: 4, saveDC: '', avgDamage: 8 },
+        { name: "Goblin", quantity: 8, AC: 15, HP: 7, attackBonus: 4, saveDC: '', avgDamage: 5 }
     ],
     "Yiga Ambush 3": [
         { name: "Yiga Footsoldier", quantity: 3, AC: 14, HP: 52, attackBonus: 5, saveDC: 13, avgDamage: 14 },
@@ -275,8 +275,8 @@ const encountersData = {
     ],
     "Water Crater 3": [
         { name: "Water Elemental", quantity: 2, AC: 14, HP: 114, attackBonus: 7, saveDC: 15, avgDamage: 26 },
-        { name: "Earth Elemental", quantity: 2, AC: 17, HP: 126, attackBonus: 8, saveDC: null, avgDamage: 28 },
-        { name: "Mud Elemental", quantity: 8, AC: 14, HP: 61, attackBonus: 6, saveDC: null, avgDamage: 12 }
+        { name: "Earth Elemental", quantity: 2, AC: 17, HP: 126, attackBonus: 8, saveDC: '', avgDamage: 28 },
+        { name: "Mud Elemental", quantity: 8, AC: 14, HP: 61, attackBonus: 6, saveDC: '', avgDamage: 12 }
     ]
 
 };
@@ -503,23 +503,60 @@ function handleCharacterClick(characterName) {
 }
 
 function handleEnemyClick(enemyName) {
-    // Open a popup window to display the enemy's data
-    const enemyWindow = window.open("CreatureWindow.html", "Enemy Window", "width=fit-content, height=fit-content");
-    
-    // Load enemy's data into the popup window
-    enemyWindow.onload = function() {
-        const enemyData = encountersData[enemyName];
-        if (enemyData) {
-            enemyWindow.document.getElementById("characterName").value = enemyName;
-            enemyWindow.document.getElementById("number").value = enemyData.quantity || "";
-            enemyWindow.document.getElementById("AC").value = enemyData.AC || "";
-            enemyWindow.document.getElementById("HP").value = enemyData.HP || "";
-            enemyWindow.document.getElementById("attack").value = enemyData.attackBonus || "";
-            enemyWindow.document.getElementById("DC").value = enemyData.saveDC || "";
-            enemyWindow.document.getElementById("damage").value = enemyData.avgDamage || "";
+    // Open Enemy_Overlay
+    const enemyOverlay = document.getElementById('Enemy_Overlay');
+    enemyOverlay.style.display = 'block';
+
+    // Get the selected encounter's data
+    const selectedEncounter = document.getElementById("encountername").value;
+    const selectedEnemy = encountersData[selectedEncounter].find(enemy => enemy.name === enemyName);
+
+    // Populate the Enemy_Overlay with the selected enemy's data
+    if (selectedEnemy) {
+        document.getElementById('enemyName').value = selectedEnemy.name;
+        document.getElementById('enemyQuantity').value = selectedEnemy.quantity;
+        document.getElementById('enemyAC').value = selectedEnemy.AC;
+        document.getElementById('enemyHP').value = selectedEnemy.HP;
+        document.getElementById('enemyAttackBonus').value = selectedEnemy.attackBonus;
+        document.getElementById('enemySaveDC').value = selectedEnemy.saveDC;
+        document.getElementById('enemyAvgDamage').value = selectedEnemy.avgDamage;
+    } else {
+        // Clear the fields if no enemy is selected
+        document.getElementById('enemyName').value = '';
+        document.getElementById('enemyQuantity').value = '';
+        document.getElementById('enemyAC').value = '';
+        document.getElementById('enemyHP').value = '';
+        document.getElementById('enemyAttackBonus').value = '';
+        document.getElementById('enemySaveDC').value = '';
+        document.getElementById('enemyAvgDamage').value = '';
+    }
+
+    // Set up event listeners for save, delete, and cancel buttons
+    document.getElementById('saveEnemy').addEventListener('click', function() {
+        alert("Enemy saved!");
+        // Handle save action
+        // Close Enemy_Overlay
+        enemyOverlay.style.display = 'none';
+    });
+
+    document.getElementById('deleteEnemy').addEventListener('click', function() {
+        if (confirm("Are you sure you want to delete this enemy?")) {
+            alert("Enemy deleted!");
+            // Handle delete action
+            // Close Enemy_Overlay
+            enemyOverlay.style.display = 'none';
         }
-    };
+    });
+
+    document.getElementById('cancelEnemy').addEventListener('click', function() {
+        if (confirm("Are you sure you want to cancel? Any unsaved changes will be lost.")) {
+            // Handle cancel action
+            // Close Enemy_Overlay
+            enemyOverlay.style.display = 'none';
+        }
+    });
 }
+
 
 // Add event listener to the "compute" button
 document.getElementById("compute").addEventListener("click", function() {
