@@ -19,7 +19,42 @@ document.addEventListener("DOMContentLoaded", function() {
         // Navigate to ../index.html
         window.location.href = "../index.html";
     });
+    
+    // Initialize WebSocket connection
+    const socket = new WebSocket("ws://example.com/socket"); // Replace with actual WebSocket URL
+
+    // Event listener for WebSocket connection opened
+    socket.addEventListener("open", function(event) {
+        console.log("WebSocket connected");
+    });
+
+    // Event listener for WebSocket messages received
+    socket.addEventListener("message", function(event) {
+        // Update the content of the footer span with the received data
+        document.querySelector("footer span").textContent = event.data;
+    });
+
+    // Event listener for WebSocket connection closed
+    socket.addEventListener("close", function(event) {
+        console.log("WebSocket disconnected");
+    });
+
+    // Simulate WebSocket update after a random time interval
+    setTimeout(function() {
+        const updateMessage = "User31181 created a new encounter!";
+        // Update the content of the footer span
+        document.querySelector("footer span").textContent = updateMessage;
+        // If WebSocket is open, send the update to the server
+        if (socket.readyState === WebSocket.OPEN) {
+            socket.send(updateMessage);
+        }
+    }, getRandomTime(1, 2) * 1000); // Convert seconds to milliseconds
 });
+
+// Function to generate a random time interval between min and max values (inclusive)
+function getRandomTime(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
 
 // Define party data in a single object
 const partiesData = {
@@ -253,7 +288,7 @@ function addNewCharacterOption() {
 
 function addCharacter(characterName, characterLevel, characterClass) {
     const newCharacter = document.createElement("p");
-    newCharacter.textContent = `${characterName}   |   Level: ${characterLevel}   |   Class: ${characterClass}`;
+    newCharacter.textContent = `${characterName}   |   Level ${characterLevel} ${characterClass}`;
     newCharacter.addEventListener("click", function() {
         handleCharacterClick(characterName);
     });
