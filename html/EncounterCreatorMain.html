@@ -84,7 +84,27 @@
             </div>             
         </div>
 
-        <footer>
+        <div id="PC_Overlay" class="overlay">
+            <div class="overlay_content">
+                <header>
+                    <input id="characterName" placeholder="Character Name"></input>
+                </header>
+            
+                <div id="overlay_body">
+                    <p> Race: <input id="characterRace"></input></p>
+                    <p> Level: <input id="characterLevel"></input></p>
+                    <p> Class: <input id="characterClass"></input></p>
+                </div>
+                
+                <footer>
+                    <button id="savePC"> SAVE </button>
+                    <button id="deletePC"> DELETE </button>
+                    <button id="cancelPC"> CANCEL </button>
+                </footer>
+            </div>
+        </div>
+
+        <footer id="WebSocketDisplay">
             <!-- WebSocket connection here. -->
         </footer>
     </body>

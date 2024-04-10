@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", function() {
     setTimeout(function() {
         const updateMessage = "User31181 created a new encounter!";
         // Update the content of the footer span
-        const parent = document.querySelector("footer");
+        const parent = document.getElementById("WebSocketDisplay");
         span = document.createElement("span");
         span.textContent = updateMessage;
         parent.appendChild(span);
@@ -453,16 +453,53 @@ function addEnemy(enemyName, quantity) {
 
 // Function to handle click event on characters in the party list
 function handleCharacterClick(characterName) {
-    // Open a popup window to display the character's data
-    const characterWindow = window.open("PCWindow.html", "Character Window", "width=fit-content, height=fit-content");
-    
-    // Load character's data into the popup window
-    characterWindow.onload = function() {
-        const characterData = partiesData[characterName];
-        if (characterData) {
-            characterWindow.characterData = characterData; // Pass characterData to the new window
+    // Open PC_Overlay
+    const PCOverlay = document.getElementById('PC_Overlay');
+    PCOverlay.style.display = 'block';
+
+    // Get the selected character's data
+    const selectedParty = document.getElementById("partyname").value;
+    const selectedCharacter = partiesData[selectedParty].find(character => character.name === characterName);
+
+    // Populate the PC_Overlay with the selected character's data
+    if (selectedCharacter) {
+        document.getElementById('characterName').value = selectedCharacter.name;
+        document.getElementById('characterRace').value = selectedCharacter.race;
+        document.getElementById('characterLevel').value = selectedCharacter.level;
+        document.getElementById('characterClass').value = selectedCharacter.class;
+    }
+
+    else {
+        document.getElementById('characterName').value = '';
+        document.getElementById('characterRace').value = '';
+        document.getElementById('characterLevel').value = '';
+        document.getElementById('characterClass').value = '';
+    }
+
+    // Set up event listeners for save, delete, and cancel buttons
+    document.getElementById('savePC').addEventListener('click', function() {
+        alert("Character saved!");
+        // Handle save action
+        // Close PC_Overlay
+        PCOverlay.style.display = 'none';
+    });
+
+    document.getElementById('deletePC').addEventListener('click', function() {
+        if (confirm("Are you sure you want to delete this character?")) {
+            alert("Character deleted!");
+            // Handle delete action
+            // Close PC_Overlay
+            PCOverlay.style.display = 'none';
         }
-    };
+    });
+
+    document.getElementById('cancelPC').addEventListener('click', function() {
+        if (confirm("Are you sure you want to cancel? Any unsaved changes will be lost.")) {
+            // Handle cancel action
+            // Close PC_Overlay
+            PCOverlay.style.display = 'none';
+        }
+    });
 }
 
 function handleEnemyClick(enemyName) {
