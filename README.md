@@ -1,10 +1,10 @@
-# elevator pitch
+# Elevator Pitch
 
 Create an elevator pitch for your application. Something that would excite an investment firm if you happen to catch a ride up the elevator with one of their representatives. Or maybe just sound cool to your friends if they are your target audience. This should be no more than a paragraph in length.
 
 My program will help DMs create balanced combat encounters for D&D. DMs will be able to save and edit the details of their party, as well as details of their encounters. Using the rules of D&D, the program will then estimate if the encounter is easy, medium, hard, or deadly.
 
-# the technologies
+# The Technologies
 
 HTML - Uses correct HTML structure for application. Four HTML pages. One for login, one for editing character details, one for editing creature details, and one for selecting saved creatures. Hyperlinks to choice artifact.
 
@@ -60,3 +60,14 @@ Application elements - Yup; got what I wanted.
 Application text content - The text is all there.
 
 Application images - It scales as desired.
+
+
+# Javascript Assignment
+
+JavaScript support for future login - see login.js
+
+JavaScript support for future database data - see... pretty much any page. Maybe not login.js
+
+JavaScript support for future WebSocket - see EncounterCreatorMain.js
+
+JavaScript support for your application's functionality - Yup. All over the place.
