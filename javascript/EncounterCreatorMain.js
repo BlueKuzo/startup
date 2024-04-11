@@ -11,6 +11,16 @@ document.addEventListener("DOMContentLoaded", function() {
     // Simulate click on "New Encounter" to initialize the encounter list
     document.querySelector("#encountersList p").click();
 
+    // Add event listener to the saveParty button
+    document.getElementById("saveParty").addEventListener("click", function() {
+        clearOutputWindows();
+    });
+
+    // Add event listener to the saveEncounter button
+    document.getElementById("saveEncounter").addEventListener("click", function() {
+        clearOutputWindows();
+    });
+
     // Populate the username
     document.getElementById("username").textContent = "BlueKuzo";
 
@@ -18,6 +28,32 @@ document.addEventListener("DOMContentLoaded", function() {
     document.getElementById("logout").addEventListener("click", function() {
         // Navigate to ../index.html
         window.location.href = "../index.html";
+    });
+
+    // Add event listener to the D&DLogo
+    document.getElementById("D&DLogo").addEventListener("click", function() {
+        // Get the D&DLogo element
+        const logo = document.getElementById("D&DLogo");
+
+        // Get the current hue value (if any)
+        let currentHue = logo.style.filter.match(/hue-rotate\(([^)]+)\)/);
+        if (!currentHue) {
+            currentHue = 0;
+        }
+
+        // If the hue filter already exists, update the hue value; otherwise, set it to a random value
+        if (currentHue) {
+            // Extract the current hue value and convert it to a number
+            currentHue = parseInt(currentHue[1]);
+            // Increase the hue value by 30 degrees
+            currentHue += 30;
+        } else {
+            // If no hue filter exists, set it to a 30 degrees
+            currentHue = 30;
+        }
+
+        // Apply the new hue filter to the logo
+        logo.style.filter = `hue-rotate(${currentHue}deg)`;
     });
 
     // Simulate WebSocket update after a random time interval
@@ -281,6 +317,17 @@ const encountersData = {
 
 };
 
+// Define the list of creatures
+const creatures = [
+    "gnoll",
+    "gnoll pack lord",
+    "goblin",
+    "goblin boss",
+    "golem (clay)",
+    "golem (flesh)",
+    "golem (iron)"
+];
+
 function fetchParties() {
     // Return party names from the centralized party data object
     return Object.keys(partiesData);
@@ -457,12 +504,12 @@ function handleCharacterClick(characterName) {
     const PCOverlay = document.getElementById('PC_Overlay');
     PCOverlay.style.display = 'block';
 
-    // Get the selected character's data
-    const selectedParty = document.getElementById("partyname").value;
-    const selectedCharacter = partiesData[selectedParty].find(character => character.name === characterName);
-
     // Populate the PC_Overlay with the selected character's data
-    if (selectedCharacter) {
+    if (characterName != null) {
+        // Get the selected character's data
+        const selectedParty = document.getElementById("partyname").value;
+        const selectedCharacter = partiesData[selectedParty].find(character => character.name === characterName);
+
         document.getElementById('characterName').value = selectedCharacter.name;
         document.getElementById('characterRace').value = selectedCharacter.race;
         document.getElementById('characterLevel').value = selectedCharacter.level;
@@ -480,6 +527,8 @@ function handleCharacterClick(characterName) {
     document.getElementById('savePC').addEventListener('click', function() {
         alert("Character saved!");
         // Handle save action
+        clearOutputWindows();
+
         // Close PC_Overlay
         PCOverlay.style.display = 'none';
     });
@@ -488,6 +537,8 @@ function handleCharacterClick(characterName) {
         if (confirm("Are you sure you want to delete this character?")) {
             alert("Character deleted!");
             // Handle delete action
+            clearOutputWindows();
+
             // Close PC_Overlay
             PCOverlay.style.display = 'none';
         }
@@ -507,12 +558,12 @@ function handleEnemyClick(enemyName) {
     const enemyOverlay = document.getElementById('Enemy_Overlay');
     enemyOverlay.style.display = 'block';
 
-    // Get the selected encounter's data
-    const selectedEncounter = document.getElementById("encountername").value;
-    const selectedEnemy = encountersData[selectedEncounter].find(enemy => enemy.name === enemyName);
-
     // Populate the Enemy_Overlay with the selected enemy's data
-    if (selectedEnemy) {
+    if (enemyName != null) {
+        // Get the selected encounter's data
+        const selectedEncounter = document.getElementById("encountername").value;
+        const selectedEnemy = encountersData[selectedEncounter].find(enemy => enemy.name === enemyName);
+
         document.getElementById('enemyName').value = selectedEnemy.name;
         document.getElementById('enemyQuantity').value = selectedEnemy.quantity;
         document.getElementById('enemyAC').value = selectedEnemy.AC;
@@ -520,7 +571,9 @@ function handleEnemyClick(enemyName) {
         document.getElementById('enemyAttackBonus').value = selectedEnemy.attackBonus;
         document.getElementById('enemySaveDC').value = selectedEnemy.saveDC;
         document.getElementById('enemyAvgDamage').value = selectedEnemy.avgDamage;
-    } else {
+    }
+    
+    else {
         // Clear the fields if no enemy is selected
         document.getElementById('enemyName').value = '';
         document.getElementById('enemyQuantity').value = '';
@@ -531,10 +584,17 @@ function handleEnemyClick(enemyName) {
         document.getElementById('enemyAvgDamage').value = '';
     }
 
+    // Set up event listeners for button
+    document.getElementById('savedCreatureButton').addEventListener('click', function() {
+        handleCreatureClick();
+    });
+
     // Set up event listeners for save, delete, and cancel buttons
     document.getElementById('saveEnemy').addEventListener('click', function() {
         alert("Enemy saved!");
         // Handle save action
+        clearOutputWindows();
+
         // Close Enemy_Overlay
         enemyOverlay.style.display = 'none';
     });
@@ -543,6 +603,8 @@ function handleEnemyClick(enemyName) {
         if (confirm("Are you sure you want to delete this enemy?")) {
             alert("Enemy deleted!");
             // Handle delete action
+            clearOutputWindows();
+
             // Close Enemy_Overlay
             enemyOverlay.style.display = 'none';
         }
@@ -557,6 +619,72 @@ function handleEnemyClick(enemyName) {
     });
 }
 
+function handleCreatureClick() {
+    // Open Creatures_Overlay
+    const creaturesOverlay = document.getElementById('Creatures_Overlay');
+    creaturesOverlay.style.display = 'block';
+
+    // Populate the creatures list when the DOM content is loaded
+    populateCreaturesList();
+    
+    // Set up event listeners for select and cancel buttons
+    document.getElementById('selectCreature').addEventListener('click', function() {
+        const selectedCreature = getSelectedCreature();
+        if (selectedCreature) {
+            alert("Selected creature: " + selectedCreature);
+            // Handle selected action
+            // Close Creatures_Overlay
+            creaturesOverlay.style.display = 'none';
+        } else {
+            alert("No creature selected! Select a creature or cancel.");
+        }
+    });
+
+    document.getElementById('cancelCreature').addEventListener('click', function() {
+        creaturesOverlay.style.display = 'none';
+    });
+}
+
+function getSelectedCreature() {
+    const selectedCreature = creaturesList.querySelector("p.selected");
+    if (selectedCreature) {
+        return selectedCreature.textContent.trim();
+    } else {
+        return null;
+    }
+}
+
+// Event Listener for Creature Selection
+creaturesList.addEventListener("click", function(event) {
+    const clickedCreature = event.target;
+    if (clickedCreature.tagName === "P") {
+        // Remove "selected" class from previously selected creature
+        const selectedCreature = creaturesList.querySelector("p.selected");
+        if (selectedCreature) {
+            selectedCreature.classList.remove("selected");
+            // Revert background color of previously selected creature
+            selectedCreature.style.backgroundColor = ""; // Revert to default color
+        }
+
+        // Toggle "selected" class and update background color of clicked creature
+        clickedCreature.classList.add("selected");
+        clickedCreature.style.backgroundColor = "lightblue"; // Change background color
+    }
+});
+
+// Populate the creatures list
+function populateCreaturesList() {
+    const creaturesList = document.getElementById("creaturesList");
+
+    // Clear existing list
+    creaturesList.innerHTML = "";
+
+    creatures.forEach(function(creature) {
+        const p = document.createElement("p");
+        p.textContent = creature;
+        creaturesList.appendChild(p);
+    });
+}
 
 // Add event listener to the "compute" button
 document.getElementById("compute").addEventListener("click", function() {

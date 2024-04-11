@@ -63,6 +63,7 @@ body {
 
 #leftColumn {
     width: 25%;
+    min-width: 265px;
 }
 
 #centerColumn {
@@ -99,7 +100,8 @@ h1 {
     background-color: rgb(178, 35, 28);
 }
 
-.table h1 {
+#savedEncounters h1,
+#selectedEncounter h1 {
     border-top: 3px solid black;
 }
 
@@ -116,10 +118,14 @@ h {
 
     font-size: 1.5em;
     overflow-y: auto;
+
+    width: 100%;
 }
 
 .list p {
     cursor: pointer;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 
 .list p:nth-child(even) {
@@ -185,6 +191,7 @@ a[href="https://github.com/BlueKuzo/startup"] {
 img {
     width: 75%;
     height: auto;
+    cursor: pointer;
 }
 
 #WebSocketDisplay {
@@ -281,4 +288,18 @@ footer span {
     flex-direction: row;
     justify-content: center;
     width: 100%;
+}
+
+#Creatures_Overlay .overlay_content header {
+    align-items: center;
+    height: 2em;
+}
+
+#Creatures_Overlay .overlay_content header h {
+    width: 100%;
+    text-align: center;
+}
+
+#creaturesList {
+    max-height: 150px;
 }

@@ -10,7 +10,7 @@
     <body>
         <div id="columns">
             <div id="leftColumn">
-                <div class="table">
+                <div id="savedParties" class="table">
                     <h1> 
                         <h> Saved Parties </h>
                     </h1>
@@ -19,7 +19,7 @@
                     </div>
                 </div>
 
-                <div class="table">
+                <div id="savedEncounters" class="table">
                     <h1> 
                         <h> Saved Encounters </h>
                     </h1>
@@ -30,11 +30,11 @@
             </div>
 
             <div id="centerColumn">
-                <div class="table">
+                <div id="selectedParty" class="table">
                     <h1>
                         <h> Party: </h>
                         <input id="partyname" placeholder="New Party Name"></input>
-                        <button> SAVE </button>
+                        <button id="saveParty"> SAVE </button>
                     </h1>
 
                     <div id="partyList" class="list">
@@ -42,11 +42,11 @@
                     </div>
                 </div>
                 
-                <div class="table">
+                <div id="selectedEncounter" class="table">
                     <h1>
                         <h> Encounter: </h>
                         <input id="encountername" placeholder="New Encounter Name"></input>
-                        <button> SAVE </button>
+                        <button id="saveEncounter"> SAVE </button>
                     </h1>
 
                     <div id="enemiesList" class="list">
@@ -79,7 +79,7 @@
                     <p>User: <span id="username"></span></p>
                     <button id="logout"> LOGOUT </button>
                     <a href="https://github.com/BlueKuzo/startup"> https://github.com/BlueKuzo/startup </a>
-                    <img alt="D&D" src="https://i.pinimg.com/originals/48/cb/53/48cb5349f515f6e59edc2a4de294f439.png" />
+                    <img id="D&DLogo" alt="D&D" src="https://i.pinimg.com/originals/48/cb/53/48cb5349f515f6e59edc2a4de294f439.png" />
                 </div>
             </div>             
         </div>
@@ -124,6 +124,23 @@
                     <button id="saveEnemy"> SAVE </button>
                     <button id="deleteEnemy"> DELETE </button>
                     <button id="cancelEnemy"> CANCEL </button>
+                </footer>
+            </div>
+        </div>
+
+        <div id="Creatures_Overlay" class="overlay">
+            <div class="overlay_content">
+                <header>
+                    <h>Saved Creatures</h>
+                </header>
+            
+                <div id="creaturesList" class="list">
+                    <!-- List of saved creatures will be dynamically added here -->
+                </div>
+                
+                <footer>
+                    <button id="selectCreature"> SELECT </button>
+                    <button id="cancelCreature"> CANCEL </button>
                 </footer>
             </div>
         </div>
