@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", function() {
             alert("Missing password!");
         } else {
             // Navigate to EncounterCreatorMain.html
-            window.location.href = "html/EncounterCreatorMain.html";
+            window.location.href = "EncounterCreatorMain.html";
         }
     });
 });
