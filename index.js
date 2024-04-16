@@ -114,15 +114,14 @@ app.use(`/api`, apiRouter);
 
 //load party list
 apiRouter.get('/parties', (req, res) => {
-  console.log("grabbing parties")  
   // Send the party names as a JSON response
-  res.json(Object.keys(partiesData));
+  res.json(partiesData);
 });
 
 //load encounter list
 apiRouter.get('/encounters', (req, res) => {  
   // Send the party names as a JSON response
-  res.json(Object.keys(encountersData));
+  res.json(encountersData);
 });
 
 //save party

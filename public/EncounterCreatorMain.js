@@ -78,7 +78,7 @@ function getRandomTime(min, max) {
 }
 
 // Function to generate HTML for party list
-function generatePartyList() {
+async function generatePartyList() {
     const partiesList = document.getElementById("partiesList");
 
     // Clear existing list
@@ -87,14 +87,20 @@ function generatePartyList() {
     // Generate HTML to add a new party
     partiesList.appendChild(createNewPartyElement());
 
-    // Generate HTML for each party
-    fetchParties().forEach(party => {
-        partiesList.appendChild(createPartyElement(party));
-    });
+    try {
+        const parties = await fetchParties();
+
+        // Generate HTML for each party
+        Object.keys(parties).forEach(partyName => {
+            const party = { name: partyName, characters: parties[partyName] };
+            partiesList.appendChild(createPartyElement(party));
+        });
+    } catch (error) {
+        console.error('Error generating party list:', error);
+    }
 }
 
 async function fetchParties() {
-    console.log("fetching parties")
     // Return party names from the centralized party data object
     return fetch('api/parties')
     .then(response => {
@@ -132,14 +138,14 @@ function createNewPartyElement() {
     return NewPartyElement;
 }
 
-function createPartyElement(partyName){
+function createPartyElement(party) {
     const partyElement = document.createElement("p");
-    partyElement.textContent = partyName;
+    partyElement.textContent = party.name;
     partyElement.addEventListener("click", function() {
         clearOutputWindows();
 
         // Fill party name input field
-        document.getElementById("partyname").value = partyName;
+        document.getElementById("partyname").value = party.name;
 
         // Fill partyList with members
         const partyList = document.getElementById("partyList");
@@ -148,9 +154,7 @@ function createPartyElement(partyName){
         // Add option to create a new character
         partyList.appendChild(addNewCharacterOption());
 
-
-
-        partiesData[partyName].forEach(character => {
+        party.characters.forEach(character => {
             partyList.appendChild(addCharacter(character.name, character.level, character.class));
         });
     });
@@ -159,7 +163,7 @@ function createPartyElement(partyName){
 }
 
 // Function to generate HTML for encounter list
-function generateEncounterList() {
+async function generateEncounterList() {
     const encountersList = document.getElementById("encountersList");
 
     // Clear existing list
@@ -168,11 +172,19 @@ function generateEncounterList() {
     // Generate HTML to add a new encounter
     encountersList.appendChild(createNewEncounterElement());
 
-    // Generate HTML for each encounter
-    fetchEncounters().forEach(encounter => {
-        encountersList.appendChild(createEncounterElement(encounter));
-    });
+    try {
+        const encounters = await fetchEncounters();
+
+        // Generate HTML for each encounter
+        Object.keys(encounters).forEach(encounterName => {
+            const encounter = { name: encounterName, enemies: encounters[encounterName] };
+            encountersList.appendChild(createEncounterElement(encounter));
+        });
+    } catch (error) {
+        console.error('Error generating encounter list:', error);
+    }
 }
+
 
 async function fetchEncounters() {
     // Return party names from the centralized party data object
@@ -212,14 +224,14 @@ function createNewEncounterElement() {
     return newEncounterElement;
 }
 
-function createEncounterElement(encounterName) {
+function createEncounterElement(encounter) {
     const encounterElement = document.createElement("p");
-    encounterElement.textContent = encounterName;
+    encounterElement.textContent = encounter.name;
     encounterElement.addEventListener("click", function() {
         clearOutputWindows();
 
         // Fill encounter name input field
-        document.getElementById("encountername").value = encounterName;
+        document.getElementById("encountername").value = encounter.name;
 
         // Fill enemiesList with enemies
         const enemiesList = document.getElementById("enemiesList");
@@ -228,7 +240,7 @@ function createEncounterElement(encounterName) {
         // Add option to create a new enemy
         enemiesList.appendChild(addNewEnemyOption());
 
-        encountersData[encounterName].forEach(enemy => {
+        encounter.enemies.forEach(enemy => {
             enemiesList.appendChild(addEnemy(enemy.name, enemy.quantity));
         });
     });
@@ -276,7 +288,6 @@ function addEnemy(enemyName, quantity) {
     return newEnemy;
 }
 
-// Function to handle click event on characters in the party list
 function handleCharacterClick(characterName) {
     // Open PC_Overlay
     const PCOverlay = document.getElementById('PC_Overlay');
@@ -460,7 +471,6 @@ function getSelectedCreature() {
     }
 }
 
-// Event Listener for Creature Selection
 creaturesList.addEventListener("click", function(event) {
     const clickedCreature = event.target;
     if (clickedCreature.tagName === "P") {
@@ -478,7 +488,6 @@ creaturesList.addEventListener("click", function(event) {
     }
 });
 
-// Populate the creatures list
 function populateCreaturesList() {
     const creaturesList = document.getElementById("creaturesList");
 
