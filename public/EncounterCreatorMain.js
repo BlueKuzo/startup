@@ -1,4 +1,5 @@
 savedPartyName = "";
+savedEncounterName = "";
 
 document.addEventListener("DOMContentLoaded", function() {
     // Fetch parties data and generate HTML for the list
@@ -69,8 +70,58 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
     // Add event listener to the saveEncounter button
-    document.getElementById("saveEncounter").addEventListener("click", function() {
-        clearOutputWindows();
+    document.getElementById("saveEncounter").addEventListener("click", async function() {
+        const newEncounterName = document.getElementById("encountername").value.trim();
+        if (!newEncounterName) {
+            alert("Encounter name cannot be blank.");
+        }
+
+        else {
+            const requestData = {
+                newEncounterName: newEncounterName,
+                savedEncounterName: savedEncounterName
+            };
+    
+            // Handle save action
+            try {
+                // Send saveEncounter data
+                const response = await fetch('/api/saveEncounter', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(requestData)
+                });
+    
+                if (response.ok) {
+
+                    const encounterElement = document.getElementById(savedEncounterName);
+                    if (encounterElement) {
+                        encounterElement.textContent = newEncounterName;
+                        encounterElement.id = newEncounterName;
+                    }
+
+                    else {
+                        //Add encounter to encountersList.
+                        document.getElementById("encountersList").appendChild(createEncounterElement(newEncounterName));
+                    }
+
+                    savedEncounterName = newEncounterName;
+                    alert("Encounter name saved!");
+                }
+                
+                else {
+                    // If response is not ok, display the error message returned by the server
+                    const errorMessage = await response.json();
+                    alert("Failed to save name: " + errorMessage.error);
+                }
+            }
+            
+            catch (error) {
+                console.error('Error saving character:', error);
+                alert("An error occurred while saving name. Please try again.");
+            }
+        }
     });
 
     // Populate the username
@@ -180,7 +231,7 @@ function createNewPartyElement() {
         savedPartyName = "";
         document.getElementById("partyname").value = savedPartyName;
 
-        getDefaultParyList();
+        getDefaultPartyList();
     });
 
     return NewPartyElement;
@@ -203,7 +254,7 @@ function createPartyElement(partyName) {
 }
 
 async function loadParty(partyName) {
-    const partyList = getDefaultParyList();
+    const partyList = getDefaultPartyList();
 
     try {
         // Fetch characters associated with the selected party
@@ -221,7 +272,7 @@ async function loadParty(partyName) {
     }
 }
 
-function getDefaultParyList() {
+function getDefaultPartyList() {
     clearOutputWindows();
 
     const partyList = document.getElementById("partyList");
@@ -372,7 +423,7 @@ async function deleteCharacter(character) {
 
         // Handle delete action
         try {
-            // Send characterSave data
+            // Send characterDelete data
             const response = await fetch('/api/deleteCharacter', {
                 method: 'POST',
                 headers: {
@@ -429,9 +480,8 @@ async function generateEncounterList() {
         const encounters = await fetchEncounters();
 
         // Generate HTML for each encounter
-        Object.keys(encounters).forEach(encounterName => {
-            const encounter = { name: encounterName, enemies: encounters[encounterName] };
-            encountersList.appendChild(createEncounterElement(encounter));
+        encounters.forEach(encounterName => {
+            encountersList.appendChild(createEncounterElement(encounterName));
         });
     } catch (error) {
         console.error('Error generating encounter list:', error);
@@ -439,7 +489,7 @@ async function generateEncounterList() {
 }
 
 async function fetchEncounters() {
-    // Return party names from the centralized party data object
+    // Return encounter names from the centralized encounter data object
     return fetch('api/encounters')
     .then(response => {
         // Check if the response is successful
@@ -459,45 +509,63 @@ async function fetchEncounters() {
 function createNewEncounterElement() {
     const newEncounterElement = document.createElement("p");
     newEncounterElement.textContent = "+ New Encounter";
+
     newEncounterElement.addEventListener("click", function() {
-        clearOutputWindows();
-
         // Reset encounter name input field
-        document.getElementById("encountername").value = "";
+        savedEncounterName = "";
+        document.getElementById("encountername").value = savedEncounterName;
 
-        // Reset enemiesList to default state
-        const enemiesList = document.getElementById("enemiesList");
-        enemiesList.innerHTML = ""; // Clear existing list
-
-        // Add option to create a new enemy
-        enemiesList.appendChild(addNewEnemyOption());
+        getDefaultEncounterList();
     });
 
     return newEncounterElement;
 }
 
-function createEncounterElement(encounter) {
+function createEncounterElement(encounterName) {
     const encounterElement = document.createElement("p");
-    encounterElement.textContent = encounter.name;
+    encounterElement.textContent = encounterName;
+    encounterElement.id = encounterName;
+
     encounterElement.addEventListener("click", function() {
-        clearOutputWindows();
-
         // Fill encounter name input field
-        document.getElementById("encountername").value = encounter.name;
+        savedEncounterName = encounterName;
+        document.getElementById("encountername").value = savedEncounterName;
 
-        // Fill enemiesList with enemies
-        const enemiesList = document.getElementById("enemiesList");
-        enemiesList.innerHTML = ""; // Clear existing list
-
-        // Add option to create a new enemy
-        enemiesList.appendChild(addNewEnemyOption());
-
-        encounter.enemies.forEach(enemy => {
-            enemiesList.appendChild(addEnemy(enemy.name, enemy.quantity));
-        });
+        loadEncounter(encounterName);
     });
 
     return encounterElement;
+}
+
+async function loadEncounter(encounterName) {
+    const encounterList = getDefaultEncounterList();
+
+    try {
+        // Fetch enemies associated with the selected encounter
+        const response = await fetch(`/api/enemies?encounterName=${encounterName}`);
+        const enemies = await response.json();
+
+        // Iterate over each enemy and add them to the encounter
+        enemies.forEach(enemy => {
+            encounterList.appendChild(addEnemy(enemy));
+        });
+    }
+
+    catch (error) {
+        console.error('Error fetching enemies for encounter:', error);
+    }
+}
+
+function getDefaultEncounterList() {
+    clearOutputWindows();
+
+    const encounterList = document.getElementById("enemiesList");
+    encounterList.innerHTML = ""; // Clear existing list
+
+    // Add option to create a new character
+    encounterList.appendChild(addNewEnemyOption());
+
+    return encounterList;
 }
 
 function addNewEnemyOption() {
@@ -510,83 +578,91 @@ function addNewEnemyOption() {
     return newEnemy;
 }
 
-function addEnemy(enemyName, quantity) {
+function addEnemy(enemy) {
     const newEnemy = document.createElement("p");
-    newEnemy.textContent = `${enemyName} (${quantity})`;
+    newEnemy.textContent = `${enemy.name} (${enemy.quantity})`;
     newEnemy.addEventListener("click", function() {
-        handleEnemyClick(enemyName);
+        handleEnemyClick(enemy);
     });
 
     return newEnemy;
 }
 
-function handleEnemyClick(enemyName) {
-    // Open Enemy_Overlay
-    const enemyOverlay = document.getElementById('Enemy_Overlay');
-    enemyOverlay.style.display = 'block';
+async function handleEnemyClick(enemy) {
+    const enemyName = document.getElementById("encountername").value.trim();
+    if (!enemyName) { alert("Create and save encounter name before editing characters. You can change the name later.") }
 
-    // Populate the Enemy_Overlay with the selected enemy's data
-    if (enemyName != null) {
-        // Get the selected encounter's data
-        const selectedEncounter = document.getElementById("encountername").value;
-        const selectedEnemy = encountersData[selectedEncounter].find(enemy => enemy.name === enemyName);
-
-        document.getElementById('enemyName').value = selectedEnemy.name;
-        document.getElementById('enemyQuantity').value = selectedEnemy.quantity;
-        document.getElementById('enemyAC').value = selectedEnemy.AC;
-        document.getElementById('enemyHP').value = selectedEnemy.HP;
-        document.getElementById('enemyAttackBonus').value = selectedEnemy.attackBonus;
-        document.getElementById('enemySaveDC').value = selectedEnemy.saveDC;
-        document.getElementById('enemyAvgDamage').value = selectedEnemy.avgDamage;
-    }
-    
     else {
-        // Clear the fields if no enemy is selected
-        document.getElementById('enemyName').value = '';
-        document.getElementById('enemyQuantity').value = '';
-        document.getElementById('enemyAC').value = '';
-        document.getElementById('enemyHP').value = '';
-        document.getElementById('enemyAttackBonus').value = '';
-        document.getElementById('enemySaveDC').value = '';
-        document.getElementById('enemyAvgDamage').value = '';
+        try {
+            const response = await fetch('/api/encounters');
+            if (!response.ok) {
+                throw new Error('Failed to fetch encounters');
+            }
+
+            const encountersData = await response.json();
+            if (!(encountersData.includes(enemyName))) {
+                alert("Save encounter name before editing characters. You can change the name later.")
+            }
+        
+            else {
+                // Open Enemy_Overlay
+                const enemyOverlay = document.getElementById('Enemy_Overlay');
+                enemyOverlay.style.display = 'block';
+
+                // Populate the PC_Overlay with the selected character's data
+                if (enemy != null ){
+                    document.getElementById('enemyName').value = enemy.name;
+                    document.getElementById('enemyQuantity').value = enemy.quantity;
+                    document.getElementById('enemyAC').value = enemy.AC;
+                    document.getElementById('enemyHP').value = enemy.HP;
+                    document.getElementById('enemyAttackBonus').value = enemy.attackBonus;
+                    document.getElementById('enemySaveDC').value = enemy.saveDC;
+                    document.getElementById('enemyAvgDamage').value = enemy.avgDamage;
+                }
+
+                else {
+                    // Clear the fields if no enemy is selected
+                    document.getElementById('enemyName').value = '';
+                    document.getElementById('enemyQuantity').value = '';
+                    document.getElementById('enemyAC').value = '';
+                    document.getElementById('enemyHP').value = '';
+                    document.getElementById('enemyAttackBonus').value = '';
+                    document.getElementById('enemySaveDC').value = '';
+                    document.getElementById('enemyAvgDamage').value = '';
+                }
+
+                // Set up event listener for savedCreatureButton
+                document.getElementById('savedCreatureButton').onclick = function() {
+                    handleCreatureClick();
+                };
+
+                // Set up event listener save button
+                document.getElementById('saveEnemy').onclick = function() {
+                    saveEnemy(enemy);
+                };
+            
+                // Set up event listener for delete button
+                document.getElementById('deleteEnemy').onclick = function() {
+                    deleteEnemy(enemy);
+                };
+            
+                // Set up event listener for cancel button
+                document.getElementById('cancelEnemy').onclick = function() {
+                    cancelEnemy();
+                };
+            }
+        }
+    
+        catch (error) {
+            console.error('Error checking encounter name:', error);
+            alert("An error has occured. Please try again.")
+        }
     }
-
-    // Set up event listeners for button
-    document.getElementById('savedCreatureButton').addEventListener('click', function() {
-        handleCreatureClick();
-    });
-
-    // Set up event listeners for save, delete, and cancel buttons
-    document.getElementById('saveEnemy').addEventListener('click', function() {
-        alert("Enemy saved!");
-        // Handle save action
-        clearOutputWindows();
-
-        // Close Enemy_Overlay
-        enemyOverlay.style.display = 'none';
-    });
-
-    document.getElementById('deleteEnemy').addEventListener('click', function() {
-        if (confirm("Are you sure you want to delete this enemy?")) {
-            alert("Enemy deleted!");
-            // Handle delete action
-            clearOutputWindows();
-
-            // Close Enemy_Overlay
-            enemyOverlay.style.display = 'none';
-        }
-    });
-
-    document.getElementById('cancelEnemy').addEventListener('click', function() {
-        if (confirm("Are you sure you want to cancel? Any unsaved changes will be lost.")) {
-            // Handle cancel action
-            // Close Enemy_Overlay
-            enemyOverlay.style.display = 'none';
-        }
-    });
 }
 
 function handleCreatureClick() {
+    alert("TODO: Creatures_Overlay");
+    /*
     // Open Creatures_Overlay
     const creaturesOverlay = document.getElementById('Creatures_Overlay');
     creaturesOverlay.style.display = 'block';
@@ -610,8 +686,116 @@ function handleCreatureClick() {
     document.getElementById('cancelCreature').addEventListener('click', function() {
         creaturesOverlay.style.display = 'none';
     });
+    */
 }
 
+async function saveEnemy(enemy) {
+    // Check if any of the character data fields are empty
+    if (!document.getElementById('enemyName').value || !document.getElementById('enemyQuantity').value ||
+        !document.getElementById('enemyAC').value || !document.getElementById('enemyHP').value ||
+        (!document.getElementById('enemyAttackBonus').value && !document.getElementById('enemySaveDC').value) ||
+        !document.getElementById('enemyAvgDamage').value) {
+        alert("Only one of Attack Bonus OR Save DC may be left blank. All other data fields are required. ");
+    }
+
+    else {
+        encounterName = document.getElementById('encountername').value;
+        const enemySave = { name: document.getElementById('enemyName').value, quantity: document.getElementById('enemyQuantity').value,
+                            AC: document.getElementById('enemyAC').value, HP: document.getElementById('enemyHP').value,
+                            attackBonus: document.getElementById('enemyAttackBonus').value, saveDC: document.getElementById('enemySaveDC').value,
+                            avgDamage: document.getElementById('enemyAvgDamage').value };
+
+        const requestData = {
+            encounterName: encounterName,
+            enemySave: enemySave,
+            enemyDelete: enemy
+        };
+
+        // Handle save action
+        try {
+            // Send enemySave data
+            const response = await fetch('/api/saveEnemy', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(requestData)
+            });
+
+            if (response.ok) {
+                alert("Enemy saved!");
+                loadEncounter(encounterName);
+
+                closeEnemyWindow();
+            }
+            
+            else {
+                alert("Failed to save enemy. Please try again.");
+            }
+        }
+        
+        catch (error) {
+            console.error('Error saving enemy:', error);
+            alert("An error occurred while saving enemy. Please try again.");
+        }
+    }
+}
+
+async function deleteEnemy(enemy) {
+    if (confirm("Are you sure you want to delete this enemy?")) {
+        encounterName = document.getElementById('encountername').value;
+
+        const requestData = {
+            encounterName: encounterName,
+            enemyDelete: enemy
+        };
+
+        // Handle delete action
+        try {
+            // Send enemyDelete data
+            const response = await fetch('/api/deleteEnemy', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(requestData)
+            });
+
+            if (response.ok) {
+                alert("Enemy deleted!");
+                loadEncounter(encounterName);
+
+                closeEnemyWindow();
+            }
+            
+            else {
+                alert("Failed to delete enemy. Please try again.");
+            }
+        }
+        
+        catch (error) {
+            console.error('Error deleting enemy:', error);
+            alert("An error occurred while deleting enemy. Please try again.");
+        }
+    }
+}
+
+async function cancelEnemy() {
+    if (confirm("Are you sure you want to cancel? Any unsaved changes will be lost.")) {
+        closeEnemyWindow();
+    }
+}
+
+function closeEnemyWindow() {
+    document.getElementById('Enemy_Overlay').style.display = 'none';
+    document.getElementById('savedCreatureButton').onclick = null;
+    document.getElementById('saveEnemy').onclick = null;
+    document.getElementById('deleteEnemy').onclick = null;
+    document.getElementById('cancelEnemy').onclick = null;
+}
+
+
+// Functions for Creature List
 function getSelectedCreature() {
     const selectedCreature = creaturesList.querySelector("p.selected");
     if (selectedCreature) {

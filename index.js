@@ -133,10 +133,15 @@ apiRouter.get('/characters', (req, res) => {
     // Assuming you have a database or data structure where characters are stored
     // Fetch characters associated with the provided party name from your data source
     // For demonstration purposes, let's assume characters are stored in the partiesData object
-    const characters = partiesData[partyName] || [];
+    const party = partiesData[partyName] || [];
+
+    // Check if the party exists
+    if (!party) {
+        return res.status(404).json({ error: 'Party not found' });
+    }
 
     // Respond with the characters associated with the party
-    res.json(characters);
+    res.json(party);
 });
 
 //save party
@@ -227,19 +232,119 @@ apiRouter.post('/deleteCharacter', (req, res) => {
 
 
 
-//load encounter list
+//load list of encounters
 apiRouter.get('/encounters', (req, res) => {  
-    // Send the party names as a JSON response
-    res.json(encountersData);
+    // Send the encounter names as a JSON response
+    res.json(Object.keys(encountersData));
 });
 
-//save encounter
+// Load encounter
+apiRouter.get('/enemies', (req, res) => {
+    // Extract the encounter name from the query parameters
+    const encounterName = req.query.encounterName;
 
-//load encounter
+    // Check if the encounter name is provided in the query parameters
+    if (!encounterName) {
+        return res.status(400).json({ error: 'Encounter name is required' });
+    }
 
-//save creature
+    // Fetch encounter data associated with the provided encounter name
+    const encounter = encountersData[encounterName];
 
-//delete creature
+    // Check if the encounter exists
+    if (!encounter) {
+        return res.status(404).json({ error: 'Encounter not found' });
+    }
+
+    // Respond with the encounter data
+    res.json(encounter);
+});
+
+// Save encounter
+apiRouter.post('/saveEncounter', (req, res) => {
+    // Extract data from the request body
+    const { newEncounterName, savedEncounterName } = req.body;
+
+    // Check if the encounter name already exists
+    if (encountersData.hasOwnProperty(newEncounterName)) {
+        return res.status(400).json({ error: 'Encounter name already exists' });
+    }
+
+    // Check if the saved encounter name exists
+    if (encountersData.hasOwnProperty(savedEncounterName)) {
+        // Replace the saved encounter name with the new encounter name
+        encountersData[newEncounterName] = encountersData[savedEncounterName];
+        // Delete the old encounter name
+        delete encountersData[savedEncounterName];
+    } else {
+        // If the encounter name doesn't exist, create a new encounter with newEncounterName
+        encountersData[newEncounterName] = [];
+    }
+
+    // Send a success response
+    res.status(200).json({ message: 'Encounter saved successfully' });
+});
+
+//save enemy
+apiRouter.post('/saveEnemy', (req, res) => {
+    // Extract data from the request body
+    const { encounterName, enemySave, enemyDelete } = req.body;
+  
+    // Check if the encounterName is a valid key in encountersData
+    if (!encountersData.hasOwnProperty(encounterName)) {
+      // If encounterName is not a name in encountersData, create a new encounter named encounterName with enemySave as a member
+      encountersData[encounterName] = [enemySave];
+    }
+
+    else if (enemyDelete == null) {
+        //Add enemySave as a new member to the encounter
+        encountersData[encounterName].push(enemySave);
+    }
+    
+    else {
+      const encounter = encountersData[encounterName];
+      const enemyIndex = encounter.findIndex(member => member.name === enemyDelete?.name);
+      
+      if (enemyIndex !== -1) {
+        // If enemyDelete is a member of that party, replace them with enemySave
+        encounter.splice(enemyIndex, 1, enemySave);
+      }
+      
+      else {
+        // Else, add enemySave as a new member to the party
+        encounter.push(enemySave);
+      }
+    }
+  
+    // Send a success response
+    res.status(200).json({ message: 'Enemy saved successfully'});
+});
+
+//delete enemy
+apiRouter.post('/deleteEnemy', (req, res) => {
+    // Extract data from the request body
+    const { encounterName, enemyDelete } = req.body;
+
+    // Check if the encounterName is a valid key in encountersData
+    if (!encountersData.hasOwnProperty(encounterName)) {
+        return res.status(404).json({ error: 'Encounter not found' });
+    }
+
+    // Find the index of the enemy to delete
+    const encounter = encountersData[encounterName];
+    const enemyIndex = encounter.findIndex(member => member.name === enemyDelete.name);
+
+    // Check if the enemy exists in the encounter
+    if (enemyIndex === -1) {
+        return res.status(404).json({ error: 'Enemy not found in the encounter' });
+    }
+
+    // Remove the enemy from the encounter
+    encounter.splice(enemyIndex, 1);
+
+    // Send a success response
+    res.status(200).json({ message: 'Enemy deleted successfully' });
+});
 
 //load creature
 
