@@ -631,25 +631,7 @@ async function handleEnemyClick(enemy) {
                     document.getElementById('enemyAvgDamage').value = '';
                 }
 
-                // Set up event listener for savedCreatureButton
-                document.getElementById('savedCreatureButton').onclick = function() {
-                    handleCreatureClick();
-                };
-
-                // Set up event listener save button
-                document.getElementById('saveEnemy').onclick = function() {
-                    saveEnemy(enemy);
-                };
-            
-                // Set up event listener for delete button
-                document.getElementById('deleteEnemy').onclick = function() {
-                    deleteEnemy(enemy);
-                };
-            
-                // Set up event listener for cancel button
-                document.getElementById('cancelEnemy').onclick = function() {
-                    cancelEnemy();
-                };
+                activateEnemyListeners(enemy);
             }
         }
     
@@ -658,35 +640,6 @@ async function handleEnemyClick(enemy) {
             alert("An error has occured. Please try again.")
         }
     }
-}
-
-function handleCreatureClick() {
-    alert("TODO: Creatures_Overlay");
-    /*
-    // Open Creatures_Overlay
-    const creaturesOverlay = document.getElementById('Creatures_Overlay');
-    creaturesOverlay.style.display = 'block';
-
-    // Populate the creatures list when the DOM content is loaded
-    populateCreaturesList();
-    
-    // Set up event listeners for select and cancel buttons
-    document.getElementById('selectCreature').addEventListener('click', function() {
-        const selectedCreature = getSelectedCreature();
-        if (selectedCreature) {
-            alert("Selected creature: " + selectedCreature);
-            // Handle selected action
-            // Close Creatures_Overlay
-            creaturesOverlay.style.display = 'none';
-        } else {
-            alert("No creature selected! Select a creature or cancel.");
-        }
-    });
-
-    document.getElementById('cancelCreature').addEventListener('click', function() {
-        creaturesOverlay.style.display = 'none';
-    });
-    */
 }
 
 async function saveEnemy(enemy) {
@@ -788,10 +741,95 @@ async function cancelEnemy() {
 
 function closeEnemyWindow() {
     document.getElementById('Enemy_Overlay').style.display = 'none';
+    invalidateEnemyListeners();
+}
+
+function activateEnemyListeners(enemy) {
+    // Set up event listener for savedCreatureButton
+    document.getElementById('savedCreatureButton').onclick = function() {
+        handleCreatureClick();
+    };
+
+    // Set up event listener save button
+    document.getElementById('saveEnemy').onclick = function() {
+        saveEnemy(enemy);
+    };
+
+    // Set up event listener for delete button
+    document.getElementById('deleteEnemy').onclick = function() {
+        deleteEnemy(enemy);
+    };
+
+    // Set up event listener for cancel button
+    document.getElementById('cancelEnemy').onclick = function() {
+        cancelEnemy();
+    };
+}
+
+function invalidateEnemyListeners() {
     document.getElementById('savedCreatureButton').onclick = null;
     document.getElementById('saveEnemy').onclick = null;
     document.getElementById('deleteEnemy').onclick = null;
     document.getElementById('cancelEnemy').onclick = null;
+}
+
+function closeCreaturesOverlay(selectedCreatureName) {
+    document.getElementById('Creatures_Overlay').style.display = 'none';
+
+    if (selectedCreatureName) {
+        // Make an API call to fetch the full creature stats using selectedCreatureName
+        fetch(`/api/creatures/${selectedCreatureName}`)
+            .then(response => {
+                // Check if the response is successful
+                if (!response.ok) {
+                    throw new Error('Failed to fetch creature stats');
+                }
+                // Parse the JSON response
+                return response.json();
+            })
+            .then(creature => {
+                // Populate the Enemy_Overlay with the fetched creature stats
+                document.getElementById('enemyName').value = creature.name;
+                document.getElementById('enemyQuantity').value = '';
+                document.getElementById('enemyAC').value = creature.AC;
+                document.getElementById('enemyHP').value = creature.HP;
+                document.getElementById('enemyAttackBonus').value = creature.attackBonus;
+                document.getElementById('enemySaveDC').value = creature.saveDC;
+                document.getElementById('enemyAvgDamage').value = creature.avgDamage;
+            })
+            .catch(error => {
+                // Handle any errors that occur during the fetch
+                console.error('Error fetching creature stats:', error.message);
+            });
+    }
+
+    activateEnemyListeners(null);
+}
+
+
+function handleCreatureClick() {
+    invalidateEnemyListeners();
+
+    // Open Creatures_Overlay
+    const creaturesOverlay = document.getElementById('Creatures_Overlay');
+    creaturesOverlay.style.display = 'block';
+
+    // Populate the creatures list when the DOM content is loaded
+    populateCreaturesList();
+    
+    // Set up event listeners for select and cancel buttons
+    document.getElementById('selectCreature').addEventListener('click', function() {
+        const creatureName = getSelectedCreature();
+        if (creatureName) {
+            closeCreaturesOverlay(creatureName);
+        } else {
+            alert("No creature selected! Select a creature or cancel.");
+        }
+    });
+
+    document.getElementById('cancelCreature').addEventListener('click', function() {
+        closeCreaturesOverlay(null);
+    });
 }
 
 
@@ -828,11 +866,20 @@ function populateCreaturesList() {
     // Clear existing list
     creaturesList.innerHTML = "";
 
-    creatures.forEach(function(creature) {
-        const p = document.createElement("p");
-        p.textContent = creature;
-        creaturesList.appendChild(p);
-    });
+    fetch('/api/creatures')
+        .then(response => response.json())
+        .then(creatures => {
+            // Populate the list with fetched creatures
+            creatures.forEach(creature => {
+                const p = document.createElement("p");
+                p.textContent = creature;
+                creaturesList.appendChild(p);
+            });
+        })
+        .catch(error => {
+            // Handle any errors
+            console.error('Error fetching creatures:', error);
+        });
 }
 
 // Add event listener to the "compute" button

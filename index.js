@@ -69,13 +69,13 @@ const encountersData = {
   ],
   "Yiga Ambush": [
       { name: "Yiga Footsoldier", quantity: 3, AC: 14, HP: 52, attackBonus: 5, saveDC: 13, avgDamage: 14 },
-      { name: "Viga Archer", quantity: 3, AC: 14, HP: 52, attackBonus: 5, saveDC: 11, avgDamage: 14 }
+      { name: "Yiga Archer", quantity: 3, AC: 14, HP: 52, attackBonus: 5, saveDC: 11, avgDamage: 14 }
   ],
   "Kohga": [
       { name: "Master Kohga", quantity: 1, AC: 18, HP: 127, attackBonus: 9, saveDC: 17, avgDamage: 12 },
       { name: "Yiga Footsoldier", quantity: 3, AC: 14, HP: 52, attackBonus: 5, saveDC: 13, avgDamage: 14 },
-      { name: "Viga Archer", quantity: 3, AC: 14, HP: 52, attackBonus: 5, saveDC: 11, avgDamage: 14 },
-      { name: "Viga Blademaster", quantity: 1, AC: 16, HP: 84, attackBonus: 7, saveDC: 15, avgDamage: 20 }
+      { name: "Yiga Archer", quantity: 3, AC: 14, HP: 52, attackBonus: 5, saveDC: 11, avgDamage: 14 },
+      { name: "Yiga Blademaster", quantity: 1, AC: 16, HP: 84, attackBonus: 7, saveDC: 15, avgDamage: 20 }
   ],
   "Mummies": [
       { name: "Mummy", quantity: 6, AC: 11, HP: 58, attackBonus: 5, saveDC: 12, avgDamage: 20 }
@@ -90,13 +90,17 @@ const encountersData = {
 
 // Define the list of creatures
 const creatures = [
-  "gnoll",
-  "gnoll pack lord",
-  "goblin",
-  "goblin boss",
-  "golem (clay)",
-  "golem (flesh)",
-  "golem (iron)"
+    { name: "Troll", AC: 15, HP: 84, attackBonus: 7, saveDC: '', avgDamage: 28 },
+    { name: "Goblin Boss", AC: 17, HP: 21, attackBonus: 4, saveDC: '', avgDamage: 8 },
+    { name: "Goblin", AC: 15, HP: 7, attackBonus: 4, saveDC: '', avgDamage: 5 },
+    { name: "Yiga Footsoldier", AC: 14, HP: 52, attackBonus: 5, saveDC: 13, avgDamage: 14 },
+    { name: "Yiga Archer", AC: 14, HP: 52, attackBonus: 5, saveDC: 11, avgDamage: 14 },
+    { name: "Yiga Blademaster", AC: 16, HP: 84, attackBonus: 7, saveDC: 15, avgDamage: 20 },
+    { name: "Master Kohga", AC: 18, HP: 127, attackBonus: 9, saveDC: 17, avgDamage: 12 },
+    { name: "Mummy", AC: 11, HP: 58, attackBonus: 5, saveDC: 12, avgDamage: 20 },
+    { name: "Water Elemental", AC: 14, HP: 114, attackBonus: 7, saveDC: 15, avgDamage: 26 },
+    { name: "Earth Elemental", AC: 17, HP: 126, attackBonus: 8, saveDC: '', avgDamage: 28 },
+    { name: "Mud Elemental", AC: 14, HP: 61, attackBonus: 6, saveDC: '', avgDamage: 12 }
 ];
 
 // The service port. In production the front-end code is statically hosted by the service on the same port.
@@ -346,7 +350,31 @@ apiRouter.post('/deleteEnemy', (req, res) => {
     res.status(200).json({ message: 'Enemy deleted successfully' });
 });
 
+// Load list of creatures
+apiRouter.get('/creatures', (req, res) => {
+    // Extract just the names from the creatures array
+    const creatureNames = creatures.map(creature => creature.name);
+    
+    // Send the list of creature names as a JSON response
+    res.json(creatureNames);
+});
+
 //load creature
+apiRouter.get('/creatures/:creatureName', (req, res) => {
+    // Extract the creature name from the request parameters
+    const creatureName = req.params.creatureName;
+
+    // Find the creature in the creatures array based on its name
+    const creature = creatures.find(creature => creature.name === creatureName);
+
+    // Check if the creature exists
+    if (!creature) {
+        return res.status(404).json({ error: 'Creature not found' });
+    }
+
+    // Send the creature stats as a JSON response
+    res.json(creature);
+});
 
 // Return the application's default page if the path is unknown
 app.use((_req, res) => {
