@@ -112,45 +112,126 @@ app.use(express.static('public'));
 var apiRouter = express.Router();
 app.use(`/api`, apiRouter);
 
-//load party list
+
+
+//load list of parties
 apiRouter.get('/parties', (req, res) => {
   // Send the party names as a JSON response
-  res.json(partiesData);
+  res.json(Object.keys(partiesData));
 });
 
-//load encounter list
-apiRouter.get('/encounters', (req, res) => {  
-  // Send the party names as a JSON response
-  res.json(encountersData);
+//load party
+apiRouter.get('/characters', (req, res) => {
+    // Extract the party name from the query parameters
+    const partyName = req.query.partyName;
+
+    // Check if the party name is provided in the query parameters
+    if (!partyName) {
+        return res.status(400).json({ error: 'Party name is required' });
+    }
+
+    // Assuming you have a database or data structure where characters are stored
+    // Fetch characters associated with the provided party name from your data source
+    // For demonstration purposes, let's assume characters are stored in the partiesData object
+    const characters = partiesData[partyName] || [];
+
+    // Respond with the characters associated with the party
+    res.json(characters);
 });
 
 //save party
-
-//load party
+apiRouter.post('/saveParty', (req, res) => {
+    // Extract data from the request body
+    const { newPartyName, savedPartyName } = req.body;
+  
+    // Check if the new party name already exists
+    if (partiesData.hasOwnProperty(newPartyName)) {
+        return res.status(400).json({ error: 'Party name already exists' });
+    }
+    
+    // Check if the saved party name exists
+    if (partiesData.hasOwnProperty(savedPartyName)) {
+        // Replace the saved party name with the new party name
+        partiesData[newPartyName] = partiesData[savedPartyName];
+        // Delete the old party name
+        delete partiesData[savedPartyName];
+    } else {
+        // If saved party name doesn't exist, create a new party with newPartyName
+        partiesData[newPartyName] = [];
+    }
+  
+    // Send a success response
+    res.status(200).json({ message: 'Party name saved successfully'});
+});
 
 //save character
-apiRouter.post('/character', (req, res) => {
-    const characterData = req.body;
-
-    // Check if any of the character data fields are empty
-    if (characterData.name.length < 1 || characterData.race.length < 1 || characterData.level.length < 1 || characterData.class.length < 1) {
-        // If any required field is empty, return a 400 Bad Request error response
-        return res.status(400).json({ error: 'All character data fields are required.' });
+apiRouter.post('/saveCharacter', (req, res) => {
+    // Extract data from the request body
+    const { partyName, characterSave, characterDelete } = req.body;
+  
+    // Check if the partyName is a valid key in partiesData
+    if (!partiesData.hasOwnProperty(partyName)) {
+      // If partyName is not a name in partiesData, create a new party named partyName with characterSave as a member
+      partiesData[partyName] = [characterSave];
     }
 
-    database.saveCharacter(characterData)
-        .then(savedCharacter => {
-            // If the character is successfully saved, send a success response to the client
-            res.status(201).json({ message: 'Character saved successfully!', character: savedCharacter });
-        })
-        .catch(error => {
-            // If an error occurs during the save operation, send an error response to the client
-            console.error('Error saving character:', error);
-            res.status(500).json({ error: 'An error occurred while saving the character.' });
-        });
+    else if (characterDelete == null) {
+        //Add characterSave as a new member to the party
+        partiesData[partyName].push(characterSave);
+    }
+    
+    else {
+      const partyMembers = partiesData[partyName];
+      const existingCharacterIndex = partyMembers.findIndex(member => member.name === characterDelete?.name);
+      
+      if (existingCharacterIndex !== -1) {
+        // If characterDelete is a member of that party, replace them with characterSave
+        partyMembers.splice(existingCharacterIndex, 1, characterSave);
+      }
+      
+      else {
+        // Else, add characterSave as a new member to the party
+        partyMembers.push(characterSave);
+      }
+    }
+  
+    // Send a success response
+    res.status(200).json({ message: 'Character saved successfully'});
 });
 
 //delete character
+apiRouter.post('/deleteCharacter', (req, res) => {
+    // Extract data from the request body
+    const { partyName, characterDelete } = req.body;
+
+    // Check if the partyName is a valid key in partiesData
+    if (!partiesData.hasOwnProperty(partyName)) {
+        return res.status(404).json({ error: 'Party not found' });
+    }
+
+    // Find the index of the character to delete
+    const partyMembers = partiesData[partyName];
+    const characterIndex = partyMembers.findIndex(member => member.name === characterDelete.name);
+
+    // Check if the character exists in the party
+    if (characterIndex === -1) {
+        return res.status(404).json({ error: 'Character not found in the party' });
+    }
+
+    // Remove the character from the party
+    partyMembers.splice(characterIndex, 1);
+
+    // Send a success response
+    res.status(200).json({ message: 'Character deleted successfully' });
+});
+
+
+
+//load encounter list
+apiRouter.get('/encounters', (req, res) => {  
+    // Send the party names as a JSON response
+    res.json(encountersData);
+});
 
 //save encounter
 

@@ -1,3 +1,5 @@
+savedPartyName = "";
+
 document.addEventListener("DOMContentLoaded", function() {
     // Fetch parties data and generate HTML for the list
     generatePartyList();
@@ -12,8 +14,58 @@ document.addEventListener("DOMContentLoaded", function() {
     document.querySelector("#encountersList p").click();
 
     // Add event listener to the saveParty button
-    document.getElementById("saveParty").addEventListener("click", function() {
-        clearOutputWindows();
+    document.getElementById("saveParty").addEventListener("click", async function() {
+        const newPartyName = document.getElementById("partyname").value.trim();
+        if (!newPartyName) {
+            alert("Party name cannot be blank.");
+        }
+
+        else {
+            const requestData = {
+                newPartyName: newPartyName,
+                savedPartyName: savedPartyName
+            };
+    
+            // Handle save action
+            try {
+                // Send saveParty data
+                const response = await fetch('/api/saveParty', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(requestData)
+                });
+    
+                if (response.ok) {
+
+                    const partyElement = document.getElementById(savedPartyName);
+                    if (partyElement) {
+                        partyElement.textContent = newPartyName;
+                        partyElement.id = newPartyName;
+                    }
+
+                    else {
+                        //Add party to partiesList.
+                        document.getElementById("partiesList").appendChild(createPartyElement(newPartyName));
+                    }
+
+                    savedPartyName = newPartyName;
+                    alert("Party name saved!");
+                }
+                
+                else {
+                    // If response is not ok, display the error message returned by the server
+                    const errorMessage = await response.json();
+                    alert("Failed to save name: " + errorMessage.error);
+                }
+            }
+            
+            catch (error) {
+                console.error('Error saving character:', error);
+                alert("An error occurred while saving name. Please try again.");
+            }
+        }
     });
 
     // Add event listener to the saveEncounter button
@@ -77,7 +129,7 @@ function getRandomTime(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-// Function to generate HTML for party list
+// Functions for parties
 async function generatePartyList() {
     const partiesList = document.getElementById("partiesList");
 
@@ -91,11 +143,12 @@ async function generatePartyList() {
         const parties = await fetchParties();
 
         // Generate HTML for each party
-        Object.keys(parties).forEach(partyName => {
-            const party = { name: partyName, characters: parties[partyName] };
-            partiesList.appendChild(createPartyElement(party));
+        parties.forEach(partyName => {
+            partiesList.appendChild(createPartyElement(partyName));
         });
-    } catch (error) {
+    }
+    
+    catch (error) {
         console.error('Error generating party list:', error);
     }
 }
@@ -121,48 +174,248 @@ async function fetchParties() {
 function createNewPartyElement() {
     const NewPartyElement = document.createElement("p");
     NewPartyElement.textContent = "+ New Party";
+
     NewPartyElement.addEventListener("click", function() {
-        clearOutputWindows();
-
         // Reset partyname input field
-        document.getElementById("partyname").value = "";
+        savedPartyName = "";
+        document.getElementById("partyname").value = savedPartyName;
 
-        // Reset partyList to default state
-        const partyList = document.getElementById("partyList");
-        partyList.innerHTML = ""; // Clear existing list
-
-        // Add option to create a new character
-        partyList.appendChild(addNewCharacterOption());
+        getDefaultParyList();
     });
 
     return NewPartyElement;
 }
 
-function createPartyElement(party) {
+function createPartyElement(partyName) {
     const partyElement = document.createElement("p");
-    partyElement.textContent = party.name;
+    partyElement.textContent = partyName;
+    partyElement.id = partyName;
+
     partyElement.addEventListener("click", function() {
-        clearOutputWindows();
-
         // Fill party name input field
-        document.getElementById("partyname").value = party.name;
+        savedPartyName = partyName;
+        document.getElementById("partyname").value = savedPartyName;
 
-        // Fill partyList with members
-        const partyList = document.getElementById("partyList");
-        partyList.innerHTML = ""; // Clear existing list
-
-        // Add option to create a new character
-        partyList.appendChild(addNewCharacterOption());
-
-        party.characters.forEach(character => {
-            partyList.appendChild(addCharacter(character.name, character.level, character.class));
-        });
+        loadParty(partyName);
     });
 
     return partyElement;
 }
 
-// Function to generate HTML for encounter list
+async function loadParty(partyName) {
+    const partyList = getDefaultParyList();
+
+    try {
+        // Fetch characters associated with the selected party
+        const response = await fetch(`/api/characters?partyName=${partyName}`);
+        const characters = await response.json();
+
+        // Iterate over each character and add them to the party list
+        characters.forEach(character => {
+            partyList.appendChild(addCharacter(character));
+        });
+    }
+
+    catch (error) {
+        console.error('Error fetching characters for party:', error);
+    }
+}
+
+function getDefaultParyList() {
+    clearOutputWindows();
+
+    const partyList = document.getElementById("partyList");
+    partyList.innerHTML = ""; // Clear existing list
+
+    // Add option to create a new character
+    partyList.appendChild(addNewCharacterOption());
+
+    return partyList;
+}
+
+function addNewCharacterOption() {
+    const newCharacter = document.createElement("p");
+    newCharacter.textContent = "+ New Character";
+    newCharacter.addEventListener("click", function() {
+        handleCharacterClick(null);
+    });
+
+    return newCharacter;
+}
+
+function addCharacter(character) {
+    const newCharacter = document.createElement("p");
+    newCharacter.textContent = `${character.name}   |   Level ${character.level} ${character.class}`;
+    newCharacter.addEventListener("click", function() {
+        handleCharacterClick(character);
+    });
+
+    return newCharacter;
+}
+
+async function handleCharacterClick(character) {
+    const partyName = document.getElementById("partyname").value.trim();
+    if (!partyName) { alert("Create and save party name before editing characters. You can change the name later.") }
+    
+    else {
+        try {
+            const response = await fetch('/api/parties');
+            if (!response.ok) {
+                throw new Error('Failed to fetch parties');
+            }
+
+            const partiesData = await response.json();
+            if (!(partiesData.includes(partyName))) {
+                alert("Save party name before editing characters. You can change the name later.")
+            }
+        
+            else {
+                // Open PC_Overlay
+                const PCOverlay = document.getElementById('PC_Overlay');
+                PCOverlay.style.display = 'block';
+
+                // Populate the PC_Overlay with the selected character's data
+                if (character != null ){
+                    document.getElementById('characterName').value = character.name;
+                    document.getElementById('characterRace').value = character.race;
+                    document.getElementById('characterLevel').value = character.level;
+                    document.getElementById('characterClass').value = character.class;
+                }
+
+                else {
+                    document.getElementById('characterName').value = '';
+                    document.getElementById('characterRace').value = '';
+                    document.getElementById('characterLevel').value = '';
+                    document.getElementById('characterClass').value = '';
+                }
+
+                // Set up event listener for save button
+                document.getElementById('savePC').onclick = function() {
+                    saveCharacter(character);
+                };
+
+                // Set up event listener for delete button
+                document.getElementById('deletePC').onclick = function() {
+                    deleteCharacter(character);
+                };
+
+                // Set up event listener for cancel button
+                document.getElementById('cancelPC').onclick = function() {
+                    cancelPC();
+                };
+            }
+        }
+    
+        catch (error) {
+            console.error('Error checking party name:', error);
+            alert("An error has occured. Please try again.")
+        }
+    }
+}
+
+async function saveCharacter(character) {
+    // Check if any of the character data fields are empty
+    if (!document.getElementById('characterName').value || !document.getElementById('characterRace').value ||
+        !document.getElementById('characterLevel').value || !document.getElementById('characterClass').value) {
+        alert("All character data fields are required.");
+    }
+
+    else {
+        partyName = document.getElementById('partyname').value;
+        const characterSave = {name: document.getElementById('characterName').value, race: document.getElementById('characterRace').value,
+        level: document.getElementById('characterLevel').value, class: document.getElementById('characterClass').value};
+
+        const requestData = {
+            partyName: partyName,
+            characterSave: characterSave,
+            characterDelete: character
+        };
+
+        // Handle save action
+        try {
+            // Send characterSave data
+            const response = await fetch('/api/saveCharacter', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(requestData)
+            });
+
+            if (response.ok) {
+                alert("Character saved!");
+                loadParty(partyName);
+
+                closePCWindow();
+            }
+            
+            else {
+                alert("Failed to save character. Please try again.");
+            }
+        }
+        
+        catch (error) {
+            console.error('Error saving character:', error);
+            alert("An error occurred while saving character. Please try again.");
+        }
+    }
+}
+
+async function deleteCharacter(character) {
+    if (confirm("Are you sure you want to delete this character?")) {
+        partyName = document.getElementById('partyname').value;
+
+        const requestData = {
+            partyName: partyName,
+            characterDelete: character
+        };
+
+        // Handle delete action
+        try {
+            // Send characterSave data
+            const response = await fetch('/api/deleteCharacter', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(requestData)
+            });
+
+            if (response.ok) {
+                alert("Character deleted!");
+                loadParty(partyName);
+
+                closePCWindow();
+            }
+            
+            else {
+                alert("Failed to delete character. Please try again.");
+            }
+        }
+        
+        catch (error) {
+            console.error('Error deleting character:', error);
+            alert("An error occurred while deleting character. Please try again.");
+        }
+    }
+}
+
+function cancelPC() {
+    if (confirm("Are you sure you want to cancel? Any unsaved changes will be lost.")) {
+        closePCWindow();
+    }
+}
+
+function closePCWindow() {
+    document.getElementById('PC_Overlay').style.display = 'none';
+    document.getElementById('savePC').onclick = null;
+    document.getElementById('deletePC').onclick = null;
+    document.getElementById('cancelPC').onclick = null;
+}
+
+
+
+// Functions for encounters
 async function generateEncounterList() {
     const encountersList = document.getElementById("encountersList");
 
@@ -184,7 +437,6 @@ async function generateEncounterList() {
         console.error('Error generating encounter list:', error);
     }
 }
-
 
 async function fetchEncounters() {
     // Return party names from the centralized party data object
@@ -248,26 +500,6 @@ function createEncounterElement(encounter) {
     return encounterElement;
 }
 
-function addNewCharacterOption() {
-    const newCharacter = document.createElement("p");
-    newCharacter.textContent = "+ New Character";
-    newCharacter.addEventListener("click", function() {
-        handleCharacterClick(null);
-    });
-
-    return newCharacter;
-}
-
-function addCharacter(characterName, characterLevel, characterClass) {
-    const newCharacter = document.createElement("p");
-    newCharacter.textContent = `${characterName}   |   Level ${characterLevel} ${characterClass}`;
-    newCharacter.addEventListener("click", function() {
-        handleCharacterClick(characterName);
-    });
-
-    return newCharacter;
-}
-
 function addNewEnemyOption() {
     const newEnemy = document.createElement("p");
     newEnemy.textContent = "+ New Enemy";
@@ -286,88 +518,6 @@ function addEnemy(enemyName, quantity) {
     });
 
     return newEnemy;
-}
-
-function handleCharacterClick(characterName) {
-    // Open PC_Overlay
-    const PCOverlay = document.getElementById('PC_Overlay');
-    PCOverlay.style.display = 'block';
-
-    // Populate the PC_Overlay with the selected character's data
-    if (characterName != null) {
-        // Get the selected character's data
-        const selectedParty = document.getElementById("partyname").value;
-        const selectedCharacter = partiesData[selectedParty].find(character => character.name === characterName);
-
-        document.getElementById('characterName').value = selectedCharacter.name;
-        document.getElementById('characterRace').value = selectedCharacter.race;
-        document.getElementById('characterLevel').value = selectedCharacter.level;
-        document.getElementById('characterClass').value = selectedCharacter.class;
-    }
-
-    else {
-        document.getElementById('characterName').value = '';
-        document.getElementById('characterRace').value = '';
-        document.getElementById('characterLevel').value = '';
-        document.getElementById('characterClass').value = '';
-    }
-
-    // Set up event listener for save button
-    document.getElementById('savePC').addEventListener('click', async function() {
-        // Check if any of the character data fields are empty
-        if (!document.getElementById('characterName').value || !document.getElementById('characterRace').value ||
-            !document.getElementById('characterLevel').value || !document.getElementById('characterClass').value) {
-            alert("All character data fields are required.");
-        }
-
-        else {
-            const character = {name: document.getElementById('characterName').value, race: document.getElementById('characterRace').value,
-            level: document.getElementById('characterLevel').value, class: document.getElementById('characterClass').value};
-
-            // Handle save action
-            const response = await fetch('/api/character', {
-                method: 'POST',
-                headers: {'content-type': '../json'},
-                body: JSON.stringify(character)
-            });
-
-            const responseData = await response.json();
-
-            if (response.ok) {
-                alert(responseData.message || "Character saved!");
-                clearOutputWindows();
-    
-                // Close PC_Overlay
-                PCOverlay.style.display = 'none';
-            }
-
-            else {
-                alert("ERROR: " + responseData.error || responseData.message || "Save failed!");
-            }
-        }
-        
-    });
-
-    // Set up event listener for delete button
-    document.getElementById('deletePC').addEventListener('click', function() {
-        if (confirm("Are you sure you want to delete this character?")) {
-            alert("Character deleted!");
-            // Handle delete action
-            clearOutputWindows();
-
-            // Close PC_Overlay
-            PCOverlay.style.display = 'none';
-        }
-    });
-
-    // Set up event listener for cancel button
-    document.getElementById('cancelPC').addEventListener('click', function() {
-        if (confirm("Are you sure you want to cancel? Any unsaved changes will be lost.")) {
-            // Handle cancel action
-            // Close PC_Overlay
-            PCOverlay.style.display = 'none';
-        }
-    });
 }
 
 function handleEnemyClick(enemyName) {
