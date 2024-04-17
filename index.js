@@ -117,6 +117,11 @@ var apiRouter = express.Router();
 app.use(`/api`, apiRouter);
 
 
+//Get the username
+apiRouter.get('/username', (req, res) => {   
+    res.json("BlueKuzo");
+});
+
 
 //load list of parties
 apiRouter.get('/parties', (req, res) => {
@@ -374,6 +379,22 @@ apiRouter.get('/creatures/:creatureName', (req, res) => {
 
     // Send the creature stats as a JSON response
     res.json(creature);
+});
+
+//calculate Challenge
+apiRouter.get('/calculate/:partyName/:encounterName', (req, res) => {
+    // Calculate challenge ratings
+    const options = ["boring", "easy", "medium", "hard", "deadly"];
+    const overallChallengeResult = options[Math.floor(Math.random() * options.length)];
+    const defensiveChallengeResult = options[Math.floor(Math.random() * options.length)];
+    const offensiveChallengeResult = options[Math.floor(Math.random() * options.length)];
+
+    // Send the challenge ratings as JSON response
+    res.json({
+        overallChallengeResult,
+        defensiveChallengeResult,
+        offensiveChallengeResult
+    });
 });
 
 // Return the application's default page if the path is unknown

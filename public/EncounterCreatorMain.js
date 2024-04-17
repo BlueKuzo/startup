@@ -124,12 +124,24 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 
-    // Populate the username
-    document.getElementById("username").textContent = "BlueKuzo";
+    // Fetch the username from the server
+    fetch('/api/username')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to fetch username');
+            }
+            return response.json();
+        })
+        .then(data => {
+            document.getElementById("username").textContent = data;
+        })
+        .catch(error => {
+            console.error('Error fetching username:', error);
+            // Handle error
+        });
 
     // Add event listener to the logout button
     document.getElementById("logout").addEventListener("click", function() {
-        // Navigate to ../index.html
         window.location.href = "index.html";
     });
 
@@ -885,27 +897,33 @@ function populateCreaturesList() {
 // Add event listener to the "compute" button
 document.getElementById("compute").addEventListener("click", function() {
     // Check if both party and encounter are selected
-    const selectedParty = document.getElementById("partyname").value;
-    const selectedEncounter = document.getElementById("encountername").value;
+    const selectedParty = document.getElementById("partyname").value.trim();
+    const selectedEncounter = document.getElementById("encountername").value.trim();
 
     if (selectedParty && selectedEncounter) {
-        // Array of possible options
-        const options = ["boring", "easy", "medium", "hard", "deadly"];
-
-        // Randomly select an option for each output window
-        const overallChallengeResult = options[Math.floor(Math.random() * options.length)];
-        const defensiveChallengeResult = options[Math.floor(Math.random() * options.length)];
-        const offensiveChallengeResult = options[Math.floor(Math.random() * options.length)];
-
-        // Display the results in the output windows
-        document.getElementById("overallChallengeResult").textContent = overallChallengeResult;
-        document.getElementById("defensiveChallengeResult").textContent = defensiveChallengeResult;
-        document.getElementById("offensiveChallengeResult").textContent = offensiveChallengeResult;
+        fetchResults(selectedParty, selectedEncounter);
     } else {
         // If either party or encounter is not selected, display an error message
         alert("Please select both a party and an encounter.");
     }
 });
+
+async function fetchResults(party, encounter) {
+    try {
+        // Fetch results from the server
+        const response = await fetch(`/api/calculate/${party}/${encounter}`);
+        const data = await response.json();
+
+        // Display the results in the output windows
+        document.getElementById("overallChallengeResult").textContent = data.overallChallengeResult;
+        document.getElementById("defensiveChallengeResult").textContent = data.defensiveChallengeResult;
+        document.getElementById("offensiveChallengeResult").textContent = data.offensiveChallengeResult;
+    } catch (error) {
+        console.error('Error fetching results:', error);
+        // Display an error message
+        alert("An error occurred while fetching results. Please try again later.");
+    }
+}
 
 function clearOutputWindows() {
     document.getElementById("overallChallengeResult").textContent = "";
