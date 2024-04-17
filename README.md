@@ -71,3 +71,16 @@ JavaScript support for future database data - EncounterCreatorMain.js has two ma
 JavaScript support for future WebSocket - EncounterCreatorMain.js mimics a WebSocket update in the setTimeout function.
 
 JavaScript support for your application's functionality - There's quite a bit. As a single example, in EncounterCreatorMain, clicking on a party or encounter loads the data to the middle of the page.
+
+
+# Service Assignment
+
+Create an HTTP service using Node.js and Express - See index.js
+
+Frontend served up using Express static middleware - See index.js
+
+Your frontend calls third party service endpoints - See document.getElementById("compute").addEventListener() in EncounterCreatorMain.js. Starts at line 898.
+
+Your backend provides service endpoints - See index.js
+
+Your frontend calls your service endpoints - Scattered all over EncounterCreatorMain.js

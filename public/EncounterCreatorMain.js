@@ -901,8 +901,18 @@ document.getElementById("compute").addEventListener("click", function() {
     const selectedEncounter = document.getElementById("encountername").value.trim();
 
     if (selectedParty && selectedEncounter) {
-        fetchResults(selectedParty, selectedEncounter);
-    } else {
+        fetch("https://api.chucknorris.io/jokes/random?category=dev")
+            .then(response => response.json())
+            .then(data => {
+                alert("This function is not currently available, so instead, here's a joke:\n\n" + data.value);
+            })
+            .catch(error => {
+                console.error('Error fetching Chuck Norris joke:', error);
+                alert("Failed to fetch Chuck Norris joke. Please try again later.");
+            });   
+        } 
+        
+        else {
         // If either party or encounter is not selected, display an error message
         alert("Please select both a party and an encounter.");
     }
