@@ -3,6 +3,7 @@ const bcrypt = require('bcrypt');
 const express = require('express');
 const app = express();
 const DB = require('./database.js');
+const { validate } = require('uuid');
 
 const authCookieName = 'token';
 
@@ -164,7 +165,7 @@ apiRouter.post('/auth/login', async (req, res) => {
       return res.status(400).send({ error: 'Please provide email/username and password' });
   }
 
-  const user = null;
+  user = null;
 
   if (username) { user = await DB.getUserByName(username); }
   else if (email) { user = await DB.getUserByEmail(email); }
@@ -195,128 +196,164 @@ apiRouter.delete('/auth/logout', (_req, res) => {
 });
 
 
-//Get the username
-apiRouter.get('/username', (req, res) => {   
-    res.json("BlueKuzo");
-});
+// Get the username
+apiRouter.get('/username', async (req, res) => {
+  try {
+    const user = await validateToken(req.cookies.token);
 
-
-//load list of parties
-apiRouter.get('/parties', (req, res) => {
-  // Send the party names as a JSON response
-  res.json(Object.keys(partiesData));
-});
-
-//load party
-apiRouter.get('/characters', (req, res) => {
-    // Extract the party name from the query parameters
-    const partyName = req.query.partyName;
-
-    // Check if the party name is provided in the query parameters
-    if (!partyName) {
-        return res.status(400).json({ error: 'Party name is required' });
-    }
-
-    // Assuming you have a database or data structure where characters are stored
-    // Fetch characters associated with the provided party name from your data source
-    // For demonstration purposes, let's assume characters are stored in the partiesData object
-    const party = partiesData[partyName] || [];
-
-    // Check if the party exists
-    if (!party) {
-        return res.status(404).json({ error: 'Party not found' });
-    }
-
-    // Respond with the characters associated with the party
-    res.json(party);
-});
-
-//save party
-apiRouter.post('/saveParty', (req, res) => {
-    // Extract data from the request body
-    const { newPartyName, savedPartyName } = req.body;
-  
-    // Check if the new party name already exists
-    if (partiesData.hasOwnProperty(newPartyName)) {
-        return res.status(400).json({ error: 'Party name already exists' });
-    }
-    
-    // Check if the saved party name exists
-    if (partiesData.hasOwnProperty(savedPartyName)) {
-        // Replace the saved party name with the new party name
-        partiesData[newPartyName] = partiesData[savedPartyName];
-        // Delete the old party name
-        delete partiesData[savedPartyName];
-    } else {
-        // If saved party name doesn't exist, create a new party with newPartyName
-        partiesData[newPartyName] = [];
-    }
-  
-    // Send a success response
-    res.status(200).json({ message: 'Party name saved successfully'});
-});
-
-//save character
-apiRouter.post('/saveCharacter', (req, res) => {
-    // Extract data from the request body
-    const { partyName, characterSave, characterDelete } = req.body;
-  
-    // Check if the partyName is a valid key in partiesData
-    if (!partiesData.hasOwnProperty(partyName)) {
-      // If partyName is not a name in partiesData, create a new party named partyName with characterSave as a member
-      partiesData[partyName] = [characterSave];
-    }
-
-    else if (characterDelete == null) {
-        //Add characterSave as a new member to the party
-        partiesData[partyName].push(characterSave);
+    if (user) {
+      res.json(user.username);
     }
     
     else {
-      const partyMembers = partiesData[partyName];
-      const existingCharacterIndex = partyMembers.findIndex(member => member.name === characterDelete?.name);
-      
-      if (existingCharacterIndex !== -1) {
-        // If characterDelete is a member of that party, replace them with characterSave
-        partyMembers.splice(existingCharacterIndex, 1, characterSave);
+      res.status(404).json({ error: 'Invalid authToken' });
+    }
+  }
+  
+  catch (error) {
+    console.error('Error getting username:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+
+// Load list of parties from the database
+apiRouter.get('/parties', async (req, res) => {
+  try {
+    const user = await validateToken(req.cookies.token);
+
+    if (user) {
+      res.json(await DB.getPartyNames(user.username));
+    }
+    
+    else {
+      res.status(404).json({ error: 'Invalid authToken' });
+    }
+  }
+  
+  catch (error) {
+    console.error('Error loading parties:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+//load party
+apiRouter.get('/characters', async (req, res) => {
+  try {
+    const user = await validateToken(req.cookies.token);
+
+    if (user) {
+      // Extract the party name from the query parameters
+      const partyName = req.query.partyName;
+
+      // Check if the party name is provided in the query parameters
+      if (!partyName) {
+        return res.status(400).json({ error: 'Party name is required' });
+      }
+    
+      const party = await DB.getParty(user.username, partyName);
+  
+      // Check if the party exists
+      if (!party) {
+          return res.status(404).json({ error: 'Party not found' });
+      }
+  
+      // Respond with the characters associated with the party
+      res.json(party);
+    }
+    
+    else {
+      res.status(404).json({ error: 'Invalid authToken' });
+    }
+  }
+  
+  catch (error) {
+    console.error('Error loading party:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// save party
+apiRouter.post('/saveParty', async (req, res) => {
+  try {
+    const user = await validateToken(req.cookies.token);
+
+    if (user) {
+      const { newPartyName, savedPartyName } = req.body;
+      const result = await DB.saveParty(user.username, newPartyName, savedPartyName);
+      res.status(200).json(result);
+    }
+    
+    else {
+      res.status(401).json({ error: 'Unauthorized' });
+    }
+  }
+  
+  catch (error) {
+    console.error('Error saving party:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// save character
+apiRouter.post('/saveCharacter', async (req, res) => {
+  try {
+    const user = await validateToken(req.cookies.token);
+
+    if (user) {
+      const { partyName, characterSave, characterDelete } = req.body;
+
+      // Check if characterDelete is provided
+      if (characterDelete == null) {
+        // Add characterSave as a new member to the party
+        await DB.saveCharacter(user.username, partyName, characterSave);
       }
       
       else {
-        // Else, add characterSave as a new member to the party
-        partyMembers.push(characterSave);
+        // Replace or add characterSave as a new member to the party
+        await DB.updateCharacter(user.username, partyName, characterSave, characterDelete);
       }
+
+      // Send a success response
+      res.status(200).json({ message: 'Character saved successfully' });
     }
+    
+    else {
+      res.status(401).json({ error: 'Unauthorized' });
+    }
+  }
   
-    // Send a success response
-    res.status(200).json({ message: 'Character saved successfully'});
+  catch (error) {
+    console.error('Error saving character:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
 });
 
-//delete character
-apiRouter.post('/deleteCharacter', (req, res) => {
-    // Extract data from the request body
-    const { partyName, characterDelete } = req.body;
+// delete character
+apiRouter.post('/deleteCharacter', async (req, res) => {
+  try {
+    const user = await validateToken(req.cookies.token);
 
-    // Check if the partyName is a valid key in partiesData
-    if (!partiesData.hasOwnProperty(partyName)) {
-        return res.status(404).json({ error: 'Party not found' });
+    if (user) {
+      const { partyName, characterDelete } = req.body;
+
+      // Remove the character from the party
+      await DB.deleteCharacter(user.username, partyName, characterDelete);
+
+      // Send a success response
+      res.status(200).json({ message: 'Character deleted successfully' });
     }
-
-    // Find the index of the character to delete
-    const partyMembers = partiesData[partyName];
-    const characterIndex = partyMembers.findIndex(member => member.name === characterDelete.name);
-
-    // Check if the character exists in the party
-    if (characterIndex === -1) {
-        return res.status(404).json({ error: 'Character not found in the party' });
+    
+    else {
+      res.status(401).json({ error: 'Unauthorized' });
     }
-
-    // Remove the character from the party
-    partyMembers.splice(characterIndex, 1);
-
-    // Send a success response
-    res.status(200).json({ message: 'Character deleted successfully' });
+  }
+  
+  catch (error) {
+    console.error('Error deleting character:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
 });
-
 
 
 //load list of encounters
@@ -483,3 +520,13 @@ app.use((_req, res) => {
 app.listen(port, () => {
   console.log(`Listening on port ${port}`);
 });
+
+async function validateToken(authToken) {
+  try {
+    const user = await DB.getUserByToken(authToken);
+    return user; // If getUserByToken returns a user, the token is valid
+  } catch (error) {
+    console.error('Error validating token:', error);
+    return false; // Return false in case of error
+  }
+}

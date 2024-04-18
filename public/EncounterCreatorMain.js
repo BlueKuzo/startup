@@ -125,7 +125,10 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
     // Fetch the username from the server
-    fetch('/api/username')
+    fetch('/api/username', {
+        method: 'GET',
+        credentials: 'same-origin' // Send cookies along with the request
+    })
         .then(response => {
             if (!response.ok) {
                 throw new Error('Failed to fetch username');
@@ -137,7 +140,6 @@ document.addEventListener("DOMContentLoaded", function() {
         })
         .catch(error => {
             console.error('Error fetching username:', error);
-            // Handle error
         });
 
     // Add event listener to the logout button
