@@ -84,3 +84,16 @@ Your frontend calls third party service endpoints - See document.getElementById(
 Your backend provides service endpoints - See index.js
 
 Your frontend calls your service endpoints - Scattered all over EncounterCreatorMain.js
+
+
+# Login Assignment
+
+Supports new user registration - See index.js line 131 - 158.
+
+Supports existing user authentication - See index.js line 161 - 182.
+
+Stores application data in MongoDB - See database.js.
+
+Stores and retrieves credentials in MongoDB - See database.js.
+
+Restricts application functionality based upon authentication - See database.js. All getters and setters are restricted to only retrieving and editing the current user's items.
