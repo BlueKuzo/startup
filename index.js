@@ -259,7 +259,7 @@ apiRouter.get('/characters', async (req, res) => {
       }
   
       // Respond with the characters associated with the party
-      res.json(party);
+      res.json(party.characters);
     }
     
     else {

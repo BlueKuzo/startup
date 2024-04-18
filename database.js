@@ -49,7 +49,7 @@ async function getPartyNames(username) {
   try {
     const parties = await partiesCollection.find({ username: username }).toArray();
       // Extract party names from the parties array
-      const partyNames = parties.map(party => party.name);
+      const partyNames = parties.map(party => party.partyName);
       return partyNames;
   }
   
@@ -118,14 +118,14 @@ async function saveCharacter(username, partyName, character) {
   }
 }
 
-async function updateCharacter(username, partyName, updatedCharacter) {
+async function updateCharacter(username, partyName, characterSave, characterDelete) {
   try {
     await ensurePartyExists(username, partyName);
 
     // Find the party and update the character within it
     await partiesCollection.updateOne(
-      { username: username, partyName: partyName, 'characters.name': updatedCharacter.name },
-      { $set: { 'characters.$': updatedCharacter } }
+      { username: username, partyName: partyName, 'characters.name': characterDelete.name },
+      { $set: { 'characters.$': characterSave } }
     );
   }
   
@@ -135,25 +135,24 @@ async function updateCharacter(username, partyName, updatedCharacter) {
   }
 }
 
-async function deleteCharacter(username, partyName, characterName) {
+async function deleteCharacter(username, partyName, characterDelete) {
   try {
     await ensurePartyExists(username, partyName);
 
     // Remove the character from the party
     await partiesCollection.updateOne(
       { username: username, partyName: partyName },
-      { $pull: { characters: { name: characterName } } }
+      { $pull: { characters: { name: characterDelete.name } } }
     );
-  }
-  
-  catch (error) {
+  } catch (error) {
     console.error('Error deleting character:', error);
     throw error;
   }
 }
 
+
 async function ensurePartyExists(username, partyName) {
-  const party = await partiesCollection.findOne({ username: username, 'parties.name': partyName });
+  const party = await partiesCollection.findOne({ username: username, partyName: partyName });
   if (!party) {
     throw new Error('Party not found');
   }
