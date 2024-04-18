@@ -142,6 +142,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // Add event listener to the logout button
     document.getElementById("logout").addEventListener("click", function() {
+        fetch('/await/auth/logout');
         window.location.href = "index.html";
     });
 

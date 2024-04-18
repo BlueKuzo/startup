@@ -126,75 +126,73 @@ app.use(`/api`, apiRouter);
 
 
 
-// CreateAuth token for a new user
-apiRouter.post('/auth/create', async (req, res) => {
-    if (await DB.getUser(req.body.email)) {
-      res.status(409).send({ msg: 'Existing user' });
-    } else {
-      const user = await DB.createUser(req.body.email, req.body.password);
-  
-      // Set the cookie
-      setAuthCookie(res, user.token);
-  
-      res.send({
-        id: user._id,
-      });
-    }
-  });
-  
-  // GetAuth token for the provided credentials
-  apiRouter.post('/auth/login', async (req, res) => {
-    const user = await DB.getUser(req.body.email);
-    if (user) {
-      if (await bcrypt.compare(req.body.password, user.password)) {
-        setAuthCookie(res, user.token);
-        res.send({ id: user._id });
-        return;
-      }
-    }
-    res.status(401).send({ msg: 'Unauthorized' });
-  });
-  
-  // DeleteAuth token if stored in cookie
-  apiRouter.delete('/auth/logout', (_req, res) => {
-    res.clearCookie(authCookieName);
-    res.status(204).end();
-  });
+// Attempt to create a new user
+apiRouter.post('/auth/register', async (req, res) => {
+  const { username, email, password } = req.body;
 
-  // GetUser returns information about a user
-  apiRouter.get('/user/:email', async (req, res) => {
-    const user = await DB.getUser(req.params.email);
-    if (user) {
-      const token = req?.cookies.token;
-      res.send({ email: user.email, authenticated: token === user.token });
-      return;
-    }
-    res.status(404).send({ msg: 'Unknown' });
-  });
-  
-  // secureApiRouter verifies credentials for endpoints
-  var secureApiRouter = express.Router();
-  apiRouter.use(secureApiRouter);
-  
-  secureApiRouter.use(async (req, res, next) => {
-    authToken = req.cookies[authCookieName];
-    const user = await DB.getUserByToken(authToken);
-    if (user) {
-      next();
-    } else {
-      res.status(401).send({ msg: 'Unauthorized' });
-    }
-  });
-
-  // setAuthCookie in the HTTP response
-  function setAuthCookie(res, authToken) {
-    res.cookie(authCookieName, authToken, {
-      secure: true,
-      httpOnly: true,
-      sameSite: 'strict',
-    });
+  if (!email || !username || !password) {
+      return res.status(400).send({ error: 'Please provide username, email, and password' });
   }
 
+  // Check if User with this email already exists
+  if (await DB.getUserByEmail(email)) {
+      return res.status(408).send({ error: 'User with this email already exists' });
+  }
+
+  // Check if User with this username already exists
+  if (await DB.getUserByName(username)) {
+      return res.status(409).send({ error: 'Username already exists' });
+  }
+
+  try {
+      const user = await DB.createUser(email, username, password);
+      setAuthCookie(res, user.token);
+      res.status(200).send({ id: user._id });
+  }
+  
+  catch (error) {
+      console.error('Error creating user:', error);
+      res.status(500).send({ error: 'Internal server error' });
+  }
+});
+
+// Attempt login with the provided credentials
+apiRouter.post('/auth/login', async (req, res) => {
+  const { username, email, password } = req.body;
+
+  if ((!username && !email) || !password) {
+      return res.status(400).send({ error: 'Please provide email/username and password' });
+  }
+
+  const user = null;
+
+  if (username) { user = await DB.getUserByName(username); }
+  else if (email) { user = await DB.getUserByEmail(email); }
+
+  if (!user) { return res.status(401).send({ error: 'User not found' }); }
+
+  if (!await bcrypt.compare(password, user.password)) {
+      return res.status(401).send({ error: 'Invalid password' });
+  }
+
+  setAuthCookie(res, user.token);
+  res.send({ id: user._id });
+  return;
+});
+
+// setAuthCookie in the HTTP response
+function setAuthCookie(res, authToken) {
+  res.cookie(authCookieName, authToken, {
+    secure: true,
+    httpOnly: true,
+    sameSite: 'strict',
+  });
+}
+
+// DeleteAuth token if stored in cookie
+apiRouter.delete('/auth/logout', (_req, res) => {
+  res.clearCookie(authCookieName);
+});
 
 
 //Get the username
